@@ -162,7 +162,11 @@ header {
     align-items: center;
     gap: 20px;
     padding: 20px;
-    background-color: var(--bg-color);
+    background-image: url('background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: var(--bg-color); /* Fallback if image fails to load */
     overflow-y: auto; /* Allow scrolling for smaller screens */
 }
 
@@ -941,13 +945,81 @@ header {
         display: none; /* Hide username on very small screens */
     }
 }
+
+
+.footer {
+    background-color: var(--secondary-bg);
+    padding: 12px 16px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--secondary-text);
+    border-top: 1px solid #E2E8F0;
+    position: relative;
+    z-index: 10;
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    justify-content: center;
+    align-items: center;
+}
+
+.copyright {
+    margin: 0;
+}
+
+.support-email {
+    position: relative;
+    cursor: pointer;
+}
+
+.email-preview {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.hidden-email {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--primary-color);
+    color: white;
+    padding: 4px 8px;
+    border-radius: var(--border-radius-sm);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    text-decoration: none;
+    font-size: 12px;
+}
+
+.support-email:hover .hidden-email {
+    opacity: 1;
+    visibility: visible;
+    top: -30px;
+}
+
+.hidden-email:hover {
+    background-color: #0E796E;
+}
+
+/* Update for mobile */
+@media (max-width: 768px) {
+    .footer {
+        padding: 10px;
+    }
+}
     </style>
 </head>
 <body>
     <!-- Login Section -->
     <div id="login-section" class="auth-container">
         <div class="auth-card">
-            <h1 class="auth-title">Login to messageium</h1>
+            <h1 class="auth-title">Login to Messageium</h1>
             <form id="login-form" class="auth-form">
                 <div class="form-group">
                     <label for="login-email" class="form-label">Email Address</label>
@@ -1161,7 +1233,15 @@ header {
             Message sent successfully!
         </div>
     </div>
-
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="copyright">© 2025 Messageium.com. All rights reserved.</p>
+            <div class="support-email">
+                <span class="email-preview">Need help? Contact support</span>
+                <a href="mailto:hello@minidushashimal.com" class="hidden-email">Messageium support-email</a>
+            </div>
+        </div>
+    </footer>
     <!-- Firebase SDK -->
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://www.gstatic.com/firebasejs/9.19.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.19.1/firebase-auth-compat.js"></script>
@@ -2356,6 +2436,31 @@ document.addEventListener('DOMContentLoaded', function() {
     window.deleteMessage = deleteMessage;
     window.generateAvatar = generateAvatar;
     window.scrollToBottom = scrollToBottom;
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const supportEmail = document.querySelector('.support-email');
+    if (supportEmail) {
+        supportEmail.addEventListener('click', function() {
+            const emailLink = this.querySelector('.hidden-email');
+            const rect = this.getBoundingClientRect();
+            const isVisible = window.getComputedStyle(emailLink).visibility === 'visible';
+            
+            if (!isVisible) {
+                emailLink.style.visibility = 'visible';
+                emailLink.style.opacity = '1';
+                emailLink.style.top = '-30px';
+                
+                // Hide after 3 seconds
+                setTimeout(() => {
+                    emailLink.style.visibility = 'hidden';
+                    emailLink.style.opacity = '0';
+                    emailLink.style.top = '0';
+                }, 3000);
+            }
+        });
+    }
 });
 </script>
 </body>
