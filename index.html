@@ -726,6 +726,71 @@ header {
     to { opacity: 0; visibility: hidden; }
 }
 
+
+/* Unread count for user list (e.g., sidebar) */
+.unread-count {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: #25D366; /* WhatsApp green */
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20px; /* Vertically centers the text */
+    font-size: 12px;
+    font-weight: 500;
+    margin-left: 10px; /* Spacing from the user name */
+    visibility: hidden; /* Hidden by default, shown when count > 0 */
+}
+
+/* Unread count for individual received messages in the chat */
+.unread-message-count {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: #25D366; /* WhatsApp green */
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20px; /* Vertically centers the text */
+    font-size: 12px;
+    font-weight: 500;
+    margin-left: 5px; /* Closer spacing for messages */
+}
+
+/* Ensure visibility when there are unread messages */
+.unread-count.active,
+.unread-message-count.active {
+    visibility: visible;
+}
+
+/* Optional hover effect for interactivity */
+.unread-count:hover,
+.unread-message-count:hover {
+    background-color: #1ebe57; /* Slightly darker green on hover */
+    transition: background-color 0.2s ease;
+}
+
+/* Positioning within message header */
+.message-header .unread-message-count {
+    vertical-align: middle; /* Aligns with text in the header */
+}
+
+/* Ensure unread count doesn't interfere with layout */
+.user-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.message-header {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Spacing between elements */
+}
+
+
 /* MOBILE SPECIFIC STYLES - WhatsApp Mobile look */
 @media (max-width: 768px) {
   .users-sidebar {
@@ -1173,19 +1238,16 @@ let selectedUser = null;
 let messagesUnsubscribe = null;
 let usersUnsubscribe = null;
 
-// Show loading overlay
+// Utility Functions
 function showLoader() {
-    loaderOverlay.style.display = 'flex';
+    if (loaderOverlay) loaderOverlay.style.display = 'flex';
 }
 
-// Hide loading overlay
 function hideLoader() {
-    loaderOverlay.style.display = 'none';
+    if (loaderOverlay) loaderOverlay.style.display = 'none';
 }
 
-// Show toast notification
 function showToast(message, type = 'success') {
-    // Create toast container if it doesn't exist
     let toastContainer = document.getElementById('toast-container');
     if (!toastContainer) {
         toastContainer = document.createElement('div');
@@ -1193,18 +1255,15 @@ function showToast(message, type = 'success') {
         document.body.appendChild(toastContainer);
     }
     
-    // Remove any existing toasts
     const existingToasts = toastContainer.querySelectorAll('.toast');
     existingToasts.forEach(toast => toast.remove());
     
-    // Create new toast
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
     toast.textContent = message;
     toastContainer.appendChild(toast);
     toastContainer.style.display = 'block';
     
-    // Remove toast after animation
     setTimeout(() => {
         toast.remove();
         if (toastContainer.children.length === 0) {
@@ -1213,111 +1272,10 @@ function showToast(message, type = 'success') {
     }, 3000);
 }
 
-// Check if we're on a mobile device
 function isMobile() {
     return window.innerWidth <= 768;
 }
 
-// Navigation event listeners
-document.addEventListener('DOMContentLoaded', function() {
-    // Navigation between auth sections
-    const toSignup = document.getElementById('to-signup');
-    if (toSignup) {
-        toSignup.addEventListener('click', () => {
-            loginSection.style.display = 'none';
-            signupSection.style.display = 'flex';
-            clearFormErrors();
-        });
-    }
-
-    const toLogin = document.getElementById('to-login');
-    if (toLogin) {
-        toLogin.addEventListener('click', () => {
-            signupSection.style.display = 'none';
-            loginSection.style.display = 'flex';
-            clearFormErrors();
-        });
-    }
-
-    const toResetPassword = document.getElementById('to-reset-password');
-    if (toResetPassword) {
-        toResetPassword.addEventListener('click', () => {
-            loginSection.style.display = 'none';
-            resetPasswordSection.style.display = 'flex';
-            clearFormErrors();
-        });
-    }
-
-    const backToLogin = document.getElementById('back-to-login');
-    if (backToLogin) {
-        backToLogin.addEventListener('click', () => {
-            resetPasswordSection.style.display = 'none';
-            loginSection.style.display = 'flex';
-            clearFormErrors();
-        });
-    }
-
-    // Fix mobile chat view
-    setupMobileView();
-
-    // Handle window resize to adjust mobile/desktop view
-    window.addEventListener('resize', () => {
-        setupMobileView();
-    });
-});
-
-// Setup mobile view
-function setupMobileView() {
-    const mobile = isMobile();
-    const chatContent = document.querySelector('.chat-content');
-    const usersSidebar = document.querySelector('.users-sidebar');
-    
-    if (!chatContent || !usersSidebar) return;
-    
-    if (mobile) {
-        // Show mobile chat header, hide desktop header
-        if (chatHeader && mobileChatHeader) {
-            chatHeader.style.display = 'none';
-            mobileChatHeader.style.display = 'flex';
-        }
-        
-        // Make sure back button works
-        if (backButton) {
-            backButton.addEventListener('click', function() {
-                chatContent.classList.remove('active');
-            });
-        }
-    } else {
-        // Show desktop chat header, hide mobile header
-        if (chatHeader && mobileChatHeader) {
-            chatHeader.style.display = 'flex';
-            mobileChatHeader.style.display = 'none';
-        }
-        
-        // Remove mobile-specific classes
-        chatContent.classList.remove('active');
-    }
-}
-
-// Set up user items click event for mobile view
-function setupUserItemsClickEvent() {
-    const userItems = document.querySelectorAll('.user-item');
-    const chatContent = document.querySelector('.chat-content');
-    
-    if (!chatContent) return;
-    
-    userItems.forEach(item => {
-        item.addEventListener('click', function() {
-            if (isMobile()) {
-                chatContent.classList.add('active');
-                // Scroll to bottom to show latest messages
-                setTimeout(scrollToBottom, 100);
-            }
-        });
-    });
-}
-
-// Clear form errors
 function clearFormErrors() {
     if (loginError) loginError.style.display = 'none';
     if (signupError) signupError.style.display = 'none';
@@ -1326,18 +1284,119 @@ function clearFormErrors() {
     if (profileError) profileError.style.display = 'none';
 }
 
-// Setup form event listeners
+function formatLastSeen(timestamp) {
+    if (!timestamp) return 'Last seen: Unknown';
+    const date = timestamp.toDate();
+    const now = new Date();
+    const diff = Math.floor((now - date) / 1000 / 60); // Difference in minutes
+    if (diff < 1) return 'Online';
+    if (diff < 60) return `Last seen: ${diff} min${diff > 1 ? 's' : ''} ago`;
+    if (diff < 1440) return `Last seen: ${Math.floor(diff / 60)} hr${Math.floor(diff / 60) > 1 ? 's' : ''} ago`;
+    return `Last seen: ${date.toLocaleDateString()} ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+}
+
+// Navigation and Setup
+document.addEventListener('DOMContentLoaded', function() {
+    const toSignup = document.getElementById('to-signup');
+    if (toSignup) {
+        toSignup.addEventListener('click', () => {
+            if (loginSection) loginSection.style.display = 'none';
+            if (signupSection) signupSection.style.display = 'flex';
+            clearFormErrors();
+        });
+    }
+
+    const toLogin = document.getElementById('to-login');
+    if (toLogin) {
+        toLogin.addEventListener('click', () => {
+            if (signupSection) signupSection.style.display = 'none';
+            if (loginSection) loginSection.style.display = 'flex';
+            clearFormErrors();
+        });
+    }
+
+    const toResetPassword = document.getElementById('to-reset-password');
+    if (toResetPassword) {
+        toResetPassword.addEventListener('click', () => {
+            if (loginSection) loginSection.style.display = 'none';
+            if (resetPasswordSection) resetPasswordSection.style.display = 'flex';
+            clearFormErrors();
+        });
+    }
+
+    const backToLogin = document.getElementById('back-to-login');
+    if (backToLogin) {
+        backToLogin.addEventListener('click', () => {
+            if (resetPasswordSection) resetPasswordSection.style.display = 'none';
+            if (loginSection) loginSection.style.display = 'flex';
+            clearFormErrors();
+        });
+    }
+
+    setupMobileView();
+    window.addEventListener('resize', setupMobileView);
+});
+
+function setupMobileView() {
+    const mobile = isMobile();
+    const chatContent = document.querySelector('.chat-content');
+    const usersSidebar = document.querySelector('.users-sidebar');
+    
+    if (!chatContent || !usersSidebar) return;
+    
+    if (mobile) {
+        if (chatHeader && mobileChatHeader) {
+            chatHeader.style.display = 'none';
+            mobileChatHeader.style.display = 'flex';
+        }
+        
+        if (backButton) {
+            backButton.addEventListener('click', function() {
+                chatContent.classList.remove('active');
+            });
+        }
+    } else {
+        if (chatHeader && mobileChatHeader) {
+            chatHeader.style.display = 'flex';
+            mobileChatHeader.style.display = 'none';
+        }
+        chatContent.classList.remove('active');
+    }
+}
+
+function setupUserItemsClickEvent() {
+    const userItems = document.querySelectorAll('.user-item');
+    const chatContent = document.querySelector('.chat-content');
+    
+    if (!chatContent) return;
+    
+    userItems.forEach(item => {
+        item.removeEventListener('click', handleUserItemClick); // Remove existing listeners
+        item.addEventListener('click', handleUserItemClick);
+    });
+    
+    function handleUserItemClick() {
+        if (isMobile()) {
+            chatContent.classList.add('active');
+            setTimeout(scrollToBottom, 100);
+        }
+    }
+}
+
+// Form Event Listeners
 if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         clearFormErrors();
         
-        const email = loginEmail.value.trim();
-        const password = loginPassword.value;
+        const email = loginEmail?.value.trim() || '';
+        const password = loginPassword?.value || '';
         
         if (!email || !password) {
-            loginError.textContent = 'Please enter both email and password';
-            loginError.style.display = 'block';
+            if (loginError) {
+                loginError.textContent = 'Please enter both email and password';
+                loginError.style.display = 'block';
+            }
             return;
         }
         
@@ -1345,11 +1404,12 @@ if (loginForm) {
         
         try {
             await auth.signInWithEmailAndPassword(email, password);
-            // Auth state change listener will handle redirection
         } catch (error) {
             hideLoader();
-            loginError.textContent = error.message;
-            loginError.style.display = 'block';
+            if (loginError) {
+                loginError.textContent = error.message;
+                loginError.style.display = 'block';
+            }
         }
     });
 }
@@ -1359,25 +1419,31 @@ if (signupForm) {
         e.preventDefault();
         clearFormErrors();
         
-        const email = signupEmail.value.trim();
-        const password = signupPassword.value;
-        const confirm = signupConfirm.value;
+        const email = signupEmail?.value.trim() || '';
+        const password = signupPassword?.value || '';
+        const confirm = signupConfirm?.value || '';
         
         if (!email || !password || !confirm) {
-            signupError.textContent = 'Please fill out all fields';
-            signupError.style.display = 'block';
+            if (signupError) {
+                signupError.textContent = 'Please fill out all fields';
+                signupError.style.display = 'block';
+            }
             return;
         }
         
         if (password !== confirm) {
-            signupError.textContent = 'Passwords do not match';
-            signupError.style.display = 'block';
+            if (signupError) {
+                signupError.textContent = 'Passwords do not match';
+                signupError.style.display = 'block';
+            }
             return;
         }
         
         if (password.length < 6) {
-            signupError.textContent = 'Password must be at least 6 characters';
-            signupError.style.display = 'block';
+            if (signupError) {
+                signupError.textContent = 'Password must be at least 6 characters';
+                signupError.style.display = 'block';
+            }
             return;
         }
         
@@ -1392,8 +1458,10 @@ if (signupForm) {
             hideLoader();
         } catch (error) {
             hideLoader();
-            signupError.textContent = error.message;
-            signupError.style.display = 'block';
+            if (signupError) {
+                signupError.textContent = error.message;
+                signupError.style.display = 'block';
+            }
         }
     });
 }
@@ -1403,11 +1471,13 @@ if (resetPasswordForm) {
         e.preventDefault();
         clearFormErrors();
         
-        const email = resetEmail.value.trim();
+        const email = resetEmail?.value.trim() || '';
         
         if (!email) {
-            resetError.textContent = 'Please enter your email address';
-            resetError.style.display = 'block';
+            if (resetError) {
+                resetError.textContent = 'Please enter your email address';
+                resetError.style.display = 'block';
+            }
             return;
         }
         
@@ -1415,28 +1485,30 @@ if (resetPasswordForm) {
         
         try {
             await auth.sendPasswordResetEmail(email);
-            resetSuccess.textContent = 'Password reset link sent to your email';
-            resetSuccess.style.display = 'block';
-            resetEmail.value = '';
+            if (resetSuccess) {
+                resetSuccess.textContent = 'Password reset link sent to your email';
+                resetSuccess.style.display = 'block';
+            }
+            if (resetEmail) resetEmail.value = '';
             hideLoader();
         } catch (error) {
             hideLoader();
-            resetError.textContent = error.message;
-            resetError.style.display = 'block';
+            if (resetError) {
+                resetError.textContent = error.message;
+                resetError.style.display = 'block';
+            }
         }
     });
 }
 
-// Verification buttons
 if (checkVerificationBtn) {
     checkVerificationBtn.addEventListener('click', async () => {
         showLoader();
-        
         try {
             await auth.currentUser.reload();
             if (auth.currentUser.emailVerified) {
-                verificationSection.style.display = 'none';
-                profileSection.style.display = 'flex';
+                if (verificationSection) verificationSection.style.display = 'none';
+                if (profileSection) profileSection.style.display = 'flex';
             } else {
                 showToast('Your email is not verified yet. Please check your inbox.', 'warning');
             }
@@ -1451,7 +1523,6 @@ if (checkVerificationBtn) {
 if (resendVerificationBtn) {
     resendVerificationBtn.addEventListener('click', async () => {
         showLoader();
-        
         try {
             await auth.currentUser.sendEmailVerification();
             showToast('Verification email resent. Please check your inbox.', 'success');
@@ -1467,81 +1538,75 @@ if (logoutFromVerificationBtn) {
     logoutFromVerificationBtn.addEventListener('click', async () => {
         try {
             await auth.signOut();
-            // Auth state change listener will handle redirection
         } catch (error) {
             showToast(error.message, 'error');
         }
     });
 }
 
-// Profile form submission
 if (profileForm) {
     profileForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         clearFormErrors();
         
-        const name = displayName.value.trim();
-        const color = avatarColor.value;
+        const name = displayName?.value.trim() || '';
+        const color = avatarColor?.value || '#128C7E';
         
         if (!name) {
-            profileError.textContent = 'Please enter a display name';
-            profileError.style.display = 'block';
+            if (profileError) {
+                profileError.textContent = 'Please enter a display name';
+                profileError.style.display = 'block';
+            }
             return;
         }
         
         showLoader();
         
         try {
-            // Save user profile to Firestore
             await db.collection('users').doc(auth.currentUser.uid).set({
                 displayName: name,
                 avatarColor: color,
                 email: auth.currentUser.email,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                lastSeen: firebase.firestore.FieldValue.serverTimestamp()
             });
             
-            profileSection.style.display = 'none';
-            chatSection.style.display = 'flex';
+            if (profileSection) profileSection.style.display = 'none';
+            if (chatSection) chatSection.style.display = 'flex';
             hideLoader();
         } catch (error) {
             hideLoader();
-            profileError.textContent = error.message;
-            profileError.style.display = 'block';
+            if (profileError) {
+                profileError.textContent = error.message;
+                profileError.style.display = 'block';
+            }
         }
     });
 }
 
-// Logout button
 if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {
         try {
             await auth.signOut();
-            // Auth state change listener will handle redirection
         } catch (error) {
             showToast(error.message, 'error');
         }
     });
 }
 
-// Update avatar preview
 if (avatarColor && displayName) {
-    avatarColor.addEventListener('input', () => {
-        updateAvatarPreview();
-    });
-
-    displayName.addEventListener('input', () => {
-        updateAvatarPreview();
-    });
+    avatarColor.addEventListener('input', updateAvatarPreview);
+    displayName.addEventListener('input', updateAvatarPreview);
 }
 
+// Chat Functions
 function updateAvatarPreview() {
-    if (!profilePicPreview) return;
+    if (!profilePicPreview || !displayName || !avatarColor) return;
     const initials = displayName.value.trim() ? displayName.value.trim()[0].toUpperCase() : '?';
     profilePicPreview.style.backgroundColor = avatarColor.value;
     profilePicPreview.textContent = initials;
 }
 
-// Generate avatar element
 function generateAvatar(name, color) {
     const initial = name ? name[0].toUpperCase() : '?';
     const avatar = document.createElement('div');
@@ -1551,11 +1616,9 @@ function generateAvatar(name, color) {
     return avatar;
 }
 
-// Chat functionality
 function setupChatFunctionality() {
     if (!messageInput || !sendBtn) return;
     
-    // Clear existing event listeners
     const newMessageInput = messageInput.cloneNode(true);
     const newSendBtn = sendBtn.cloneNode(true);
     
@@ -1567,14 +1630,11 @@ function setupChatFunctionality() {
         sendBtn.parentNode.replaceChild(newSendBtn, sendBtn);
     }
     
-    // Update global references
     messageInput = newMessageInput;
     sendBtn = newSendBtn;
     
-    // Initialize send button state
     sendBtn.disabled = !messageInput.value.trim();
     
-    // Add event listeners
     messageInput.addEventListener('input', () => {
         sendBtn.disabled = !messageInput.value.trim();
     });
@@ -1590,183 +1650,342 @@ function setupChatFunctionality() {
 }
 
 async function sendMessage() {
-    if (!messageInput || !messageInput.value.trim() || !selectedUser) return;
+    if (!messageInput || !messageInput.value.trim() || !selectedUser || !currentUser) return;
     
     const messageText = messageInput.value.trim();
     messageInput.value = '';
     sendBtn.disabled = true;
     
     try {
-        // Create a chat ID that's the same for both users
         const chatId = [currentUser.uid, selectedUser.id].sort().join('_');
+        const messageRef = db.collection('chats').doc(chatId).collection('messages').doc();
         
-        // Add message to Firestore
-        await db.collection('chats').doc(chatId).collection('messages').add({
+        await messageRef.set({
             text: messageText,
             senderId: currentUser.uid,
             receiverId: selectedUser.id,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            status: 'sent',
+            isDeleted: false
         });
         
-        // Scroll to bottom after sending
-        scrollToBottom();
+        await messageRef.update({ status: 'delivered' });
+        
+        await db.collection('users').doc(currentUser.uid).update({
+            lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+        });
     } catch (error) {
         showToast(error.message, 'error');
+    } finally {
+        sendBtn.disabled = false;
     }
 }
 
-// Select a user to chat with
-function selectUser(user) {
-    if (!usersList || !messagesContainer) return;
-    
-    // Clear previous selection
-    const activeUserElements = document.querySelectorAll('.user-item.active');
-    activeUserElements.forEach(el => el.classList.remove('active'));
-    
-    // Update selection
-    selectedUser = user;
-    const userElement = document.getElementById(`user-${user.id}`);
-    if (userElement) {
-        userElement.classList.add('active');
-    }
-    
-    // Update chat headers (both mobile and desktop)
-    if (recipientName) recipientName.textContent = user.displayName;
-    if (mobileRecipientName) mobileRecipientName.textContent = user.displayName;
-    
-    // Update avatars
-    if (recipientAvatar) {
-        recipientAvatar.innerHTML = '';
-        recipientAvatar.appendChild(generateAvatar(user.displayName, user.avatarColor));
-    }
-    
-    if (mobileRecipientAvatar) {
-        mobileRecipientAvatar.innerHTML = '';
-        mobileRecipientAvatar.appendChild(generateAvatar(user.displayName, user.avatarColor));
-    }
-    
-    // Show active chat
-    if (emptyChat) emptyChat.style.display = 'none';
-    if (activeChat) activeChat.style.display = 'flex';
-    
-    // Clear messages
-    messagesContainer.innerHTML = '';
-    
-    // Re-setup chat functionality for mobile
-    setupChatFunctionality();
-    
-    // Unsubscribe from previous messages listener
-    if (messagesUnsubscribe) {
-        messagesUnsubscribe();
-    }
-    
-    // Listen for messages
-    const chatId = [currentUser.uid, user.id].sort().join('_');
-    messagesUnsubscribe = db.collection('chats').doc(chatId).collection('messages')
-        .orderBy('timestamp', 'asc')
-        .onSnapshot(snapshot => {
-            let hasNewMessages = false;
-            snapshot.docChanges().forEach(change => {
-                if (change.type === 'added') {
-                    const message = change.doc.data();
-                    displayMessage(message);
-                    hasNewMessages = true;
-                }
-            });
-            // Scroll to bottom after new messages
-            if (hasNewMessages) {
-                scrollToBottom();
-            }
-        }, error => {
-            console.error("Error getting messages: ", error);
-            showToast(error.message, 'error');
-        });
-}
+// ... (Keep all other code the same until displayMessage)
 
-// Display a message
-function displayMessage(message) {
-    if (!messagesContainer) return;
+// Update displayMessage to return the created element and handle status updates better
+function displayMessage(message, isNew = false) {
+    if (!messagesContainer || !currentUser) return null;
+    
+    if (document.querySelector(`.message[data-id="${message.id}"]`)) {
+        return null;
+    }
     
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${message.senderId === currentUser.uid ? 'my-message' : 'other-message'}`;
+    messageDiv.dataset.id = message.id;
     
     const timestamp = message.timestamp ? message.timestamp.toDate() : new Date();
     const time = timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     
-    // Get sender info
     const isMine = message.senderId === currentUser.uid;
+    let senderName = isMine ? (userProfile?.displayName || 'Me') : (selectedUser?.displayName || 'User');
+    let senderColor = isMine ? (userProfile?.avatarColor || '#128C7E') : (selectedUser?.avatarColor || '#128C7E');
     
-    // Fix: Handle case where userProfile or selectedUser might be null
-    let senderName, senderColor;
-    
-    if (isMine && userProfile) {
-        senderName = userProfile.displayName;
-        senderColor = userProfile.avatarColor;
-    } else if (!isMine && selectedUser) {
-        senderName = selectedUser.displayName;
-        senderColor = selectedUser.avatarColor;
-    } else {
-        // Fallback values if user info is missing
-        senderName = 'User';
-        senderColor = '#128C7E';
-    }
-    
-    // For "my-message", don't include sender name and avatar
+    let statusHTML = '';
     if (isMine) {
-        messageDiv.innerHTML = `
-            <div class="message-header">
-                <span class="message-time">${time}</span>
-            </div>
-            <div class="message-content">${message.text}</div>
-        `;
-    } else {
-        messageDiv.innerHTML = `
-            <div class="message-header">
-                ${generateAvatar(senderName, senderColor).outerHTML}
-                <span class="message-sender">${senderName}</span>
-                <span class="message-time">${time}</span>
-            </div>
-            <div class="message-content">${message.text}</div>
-        `;
+        if (message.isDeleted) {
+            statusHTML = '<span class="message-deleted">Deleted</span>';
+        } else {
+            switch(message.status) {
+                case 'sent': statusHTML = '<span class="message-status sent">✓</span>'; break;
+                case 'delivered': statusHTML = '<span class="message-status delivered">✓✓</span>'; break;
+                case 'read': statusHTML = '<span class="message-status read">✓✓</span>'; break;
+            }
+        }
     }
+    
+    let messageContent = message.isDeleted ? 
+        '<i class="deleted-message-text">This message was deleted</i>' :
+        (isMine ? `
+            <div class="message-text">${message.text}</div>
+            <div class="message-actions">
+                <button class="delete-message-btn" onclick="showDeleteOptions('${message.id}')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                </button>
+            </div>
+        ` : `<div class="message-text">${message.text}</div>`);
+    
+    messageDiv.innerHTML = isMine ? `
+        <div class="message-header">
+            <span class="message-time">${time}</span>
+            ${statusHTML}
+        </div>
+        <div class="message-content">${messageContent}</div>
+    ` : `
+        <div class="message-header">
+            <div class="user-avatar" style="background-color: ${senderColor};">${senderName.charAt(0).toUpperCase()}</div>
+            <span class="message-sender">${senderName}</span>
+            <span class="message-time">${time}</span>
+        </div>
+        <div class="message-content">${messageContent}</div>
+    `;
     
     messagesContainer.appendChild(messageDiv);
-}
-
-// Load users
-function loadUsers() {
-    if (!usersList) return;
     
-    if (usersUnsubscribe) {
-        usersUnsubscribe();
+    if (!isMine && !message.isDeleted && message.status !== 'read' && isNew) {
+        const chatId = [currentUser.uid, message.senderId].sort().join('_');
+        db.collection('chats').doc(chatId).collection('messages').doc(message.id)
+            .update({ status: 'read' })
+            .catch(error => console.error("Error updating message status:", error));
     }
     
+    if (isNew) scrollToBottom();
+    
+    return messageDiv; // Return the element for potential updates
+}
+
+// Update selectUser to handle real-time status updates properly
+function selectUser(user) {
+    if (!usersList || !messagesContainer || !currentUser) return;
+    
+    const activeUserElements = document.querySelectorAll('.user-item.active');
+    activeUserElements.forEach(el => el.classList.remove('active'));
+    
+    selectedUser = user;
+    const userElement = document.getElementById(`user-${user.id}`);
+    if (userElement) userElement.classList.add('active');
+    
+    messagesContainer.innerHTML = '<div class="loading-messages">Loading...</div>';
+    
+    if (emptyChat) emptyChat.style.display = 'none';
+    if (activeChat) activeChat.style.display = 'flex';
+    
+    const userDisplayName = user.displayName || user.email.split('@')[0] || 'User';
+    const userAvatarColor = user.avatarColor || '#128C7E';
+    const userInitial = userDisplayName.charAt(0).toUpperCase();
+    
+    if (recipientName) recipientName.textContent = `${userDisplayName} (${formatLastSeen(user.lastSeen)})`;
+    if (mobileRecipientName) mobileRecipientName.textContent = `${userDisplayName} (${formatLastSeen(user.lastSeen)})`;
+    if (recipientAvatar) {
+        recipientAvatar.textContent = userInitial;
+        recipientAvatar.style.backgroundColor = userAvatarColor;
+    }
+    if (mobileRecipientAvatar) {
+        mobileRecipientAvatar.textContent = userInitial;
+        mobileRecipientAvatar.style.backgroundColor = userAvatarColor;
+    }
+    
+    setupChatFunctionality();
+    
+    if (messagesUnsubscribe) messagesUnsubscribe();
+    
+    const chatId = [currentUser.uid, user.id].sort().join('_');
+    const MESSAGES_PER_PAGE = 50;
+    
+    db.collection('users').doc(currentUser.uid).update({
+        lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+    }).catch(error => console.error("Error updating lastSeen:", error));
+    
+    Promise.all([
+        db.collection('deletedMessages').where('chatId', '==', chatId).get(),
+        db.collection('chats').doc(chatId).collection('messages')
+            .orderBy('timestamp', 'asc')
+            .limit(MESSAGES_PER_PAGE)
+            .get()
+    ]).then(([deletedSnapshot, messagesSnapshot]) => {
+        const deletedMessageIds = new Set(deletedSnapshot.docs.map(doc => doc.data().messageId));
+        messagesContainer.innerHTML = '';
+        
+        messagesSnapshot.docs
+            .filter(doc => !deletedMessageIds.has(doc.id))
+            .forEach(doc => displayMessage({ id: doc.id, ...doc.data() }));
+        
+        scrollToBottom();
+        
+        messagesUnsubscribe = db.collection('chats').doc(chatId).collection('messages')
+            .orderBy('timestamp', 'asc')
+            .onSnapshot(snapshot => {
+                snapshot.docChanges().forEach(change => {
+                    const message = { id: change.doc.id, ...change.doc.data() };
+                    if (deletedMessageIds.has(message.id)) return;
+                    
+                    if (change.type === 'added') {
+                        displayMessage(message, true);
+                    } else if (change.type === 'modified') {
+                        const existingMessage = document.querySelector(`.message[data-id="${message.id}"]`);
+                        if (existingMessage) {
+                            if (message.isDeleted) {
+                                existingMessage.innerHTML = '<i class="deleted-message-text">This message was deleted</i>';
+                                existingMessage.classList.add('deleted-for-me');
+                            } else if (message.senderId === currentUser.uid) {
+                                // Update status tick marks in real-time
+                                const header = existingMessage.querySelector('.message-header');
+                                let statusHTML = '';
+                                switch(message.status) {
+                                    case 'sent': statusHTML = '<span class="message-status sent">✓</span>'; break;
+                                    case 'delivered': statusHTML = '<span class="message-status delivered">✓✓</span>'; break;
+                                    case 'read': statusHTML = '<span class="message-status read">✓✓</span>'; break;
+                                }
+                                header.innerHTML = `
+                                    <span class="message-time">${existingMessage.querySelector('.message-time').textContent}</span>
+                                    ${statusHTML}
+                                `;
+                            }
+                        }
+                    } else if (change.type === 'removed') {
+                        const messageElement = document.querySelector(`.message[data-id="${message.id}"]`);
+                        if (messageElement) messageElement.remove();
+                    }
+                });
+                updateAllUnreadCounts();
+            }, error => {
+                console.error("Error getting messages:", error);
+                showToast(error.message, 'error');
+                messagesContainer.innerHTML = '<div class="message-error">Failed to load messages.</div>';
+            });
+    }).catch(error => {
+        console.error("Error loading messages:", error);
+        showToast(error.message, 'error');
+        messagesContainer.innerHTML = '<div class="message-error">Failed to load messages.</div>';
+    });
+}
+
+// ... (Keep all other code the same from here onward)
+
+function selectUser(user) {
+    if (!usersList || !messagesContainer || !currentUser) return;
+    
+    const activeUserElements = document.querySelectorAll('.user-item.active');
+    activeUserElements.forEach(el => el.classList.remove('active'));
+    
+    selectedUser = user;
+    const userElement = document.getElementById(`user-${user.id}`);
+    if (userElement) userElement.classList.add('active');
+    
+    messagesContainer.innerHTML = '<div class="loading-messages">Loading...</div>';
+    
+    if (emptyChat) emptyChat.style.display = 'none';
+    if (activeChat) activeChat.style.display = 'flex';
+    
+    const userDisplayName = user.displayName || user.email.split('@')[0] || 'User';
+    const userAvatarColor = user.avatarColor || '#128C7E';
+    const userInitial = userDisplayName.charAt(0).toUpperCase();
+    
+    if (recipientName) recipientName.textContent = `${userDisplayName} (${formatLastSeen(user.lastSeen)})`;
+    if (mobileRecipientName) mobileRecipientName.textContent = `${userDisplayName} (${formatLastSeen(user.lastSeen)})`;
+    if (recipientAvatar) {
+        recipientAvatar.textContent = userInitial;
+        recipientAvatar.style.backgroundColor = userAvatarColor;
+    }
+    if (mobileRecipientAvatar) {
+        mobileRecipientAvatar.textContent = userInitial;
+        mobileRecipientAvatar.style.backgroundColor = userAvatarColor;
+    }
+    
+    setupChatFunctionality();
+    
+    if (messagesUnsubscribe) messagesUnsubscribe();
+    
+    const chatId = [currentUser.uid, user.id].sort().join('_');
+    const MESSAGES_PER_PAGE = 50;
+    
+    db.collection('users').doc(currentUser.uid).update({
+        lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+    }).catch(error => console.error("Error updating lastSeen:", error));
+    
+    Promise.all([
+        db.collection('deletedMessages').where('chatId', '==', chatId).get(),
+        db.collection('chats').doc(chatId).collection('messages')
+            .orderBy('timestamp', 'asc')
+            .limit(MESSAGES_PER_PAGE)
+            .get()
+    ]).then(([deletedSnapshot, messagesSnapshot]) => {
+        const deletedMessageIds = new Set(deletedSnapshot.docs.map(doc => doc.data().messageId));
+        messagesContainer.innerHTML = '';
+        
+        messagesSnapshot.docs
+            .filter(doc => !deletedMessageIds.has(doc.id))
+            .forEach(doc => displayMessage({ id: doc.id, ...doc.data() }));
+        
+        scrollToBottom();
+        
+        messagesUnsubscribe = db.collection('chats').doc(chatId).collection('messages')
+            .orderBy('timestamp', 'asc')
+            .onSnapshot(snapshot => {
+                snapshot.docChanges().forEach(change => {
+                    const message = { id: change.doc.id, ...change.doc.data() };
+                    if (deletedMessageIds.has(message.id)) return;
+                    
+                    if (change.type === 'added') {
+                        displayMessage(message, true);
+                    } else if (change.type === 'modified') {
+                        const existingMessage = document.querySelector(`.message[data-id="${message.id}"]`);
+                        if (existingMessage) {
+                            if (message.isDeleted) {
+                                existingMessage.innerHTML = '<i class="deleted-message-text">This message was deleted</i>';
+                                existingMessage.classList.add('deleted-for-me');
+                            } else if (message.senderId === currentUser.uid) {
+                                const statusElement = existingMessage.querySelector('.message-status');
+                                if (statusElement && message.status) {
+                                    statusElement.className = `message-status ${message.status}`;
+                                    statusElement.innerHTML = message.status === 'sent' ? '✓' : '✓✓';
+                                }
+                            }
+                        }
+                    } else if (change.type === 'removed') {
+                        const messageElement = document.querySelector(`.message[data-id="${message.id}"]`);
+                        if (messageElement) messageElement.remove();
+                    }
+                });
+                updateAllUnreadCounts();
+            }, error => {
+                console.error("Error getting messages:", error);
+                showToast(error.message, 'error');
+                messagesContainer.innerHTML = '<div class="message-error">Failed to load messages.</div>';
+            });
+    }).catch(error => {
+        console.error("Error loading messages:", error);
+        showToast(error.message, 'error');
+        messagesContainer.innerHTML = '<div class="message-error">Failed to load messages.</div>';
+    });
+}
+
+function loadUsers() {
+    if (!usersList || !currentUser) return;
+    
+    if (usersUnsubscribe) usersUnsubscribe();
     usersList.innerHTML = '';
     
     usersUnsubscribe = db.collection('users')
         .where('email', '!=', currentUser.email)
         .onSnapshot(snapshot => {
             snapshot.docChanges().forEach(change => {
-                if (change.type === 'added') {
-                    const user = { id: change.doc.id, ...change.doc.data() };
-                    addUserToList(user);
-                } else if (change.type === 'modified') {
-                    const user = { id: change.doc.id, ...change.doc.data() };
-                    updateUserInList(user);
-                } else if (change.type === 'removed') {
-                    removeUserFromList(change.doc.id);
-                }
+                const user = { id: change.doc.id, ...change.doc.data() };
+                if (change.type === 'added') addUserToList(user);
+                else if (change.type === 'modified') updateUserInList(user);
+                else if (change.type === 'removed') removeUserFromList(user.id);
             });
-            
-            // Setup user items click event after users are loaded
             setupUserItemsClickEvent();
         }, error => {
-            console.error("Error getting users: ", error);
+            console.error("Error getting users:", error);
             showToast(error.message, 'error');
         });
 }
 
-// Add a user to the users list
 function addUserToList(user) {
     if (!usersList) return;
     
@@ -1775,66 +1994,62 @@ function addUserToList(user) {
     userItem.id = `user-${user.id}`;
     
     const avatar = generateAvatar(user.displayName, user.avatarColor);
+    const unreadCount = document.createElement('span');
+    unreadCount.className = 'unread-count';
+    unreadCount.style.display = 'none';
     
     userItem.innerHTML = `
         <div class="user-status"></div>
         <span class="user-name">${user.displayName}</span>
+        <span class="last-seen">${formatLastSeen(user.lastSeen)}</span>
     `;
-    
     userItem.prepend(avatar);
+    userItem.appendChild(unreadCount);
     
-    userItem.addEventListener('click', () => {
-        selectUser(user);
-    });
-    
+    userItem.addEventListener('click', () => selectUser(user));
     usersList.appendChild(userItem);
+    
+    updateUnreadCount(user.id, unreadCount);
 }
 
-// Update a user in the users list
 function updateUserInList(user) {
     const userItem = document.getElementById(`user-${user.id}`);
-    if (userItem) {
-        const nameElement = userItem.querySelector('.user-name');
-        if (nameElement) nameElement.textContent = user.displayName;
-        
-        const avatarElement = userItem.querySelector('.user-avatar');
-        if (avatarElement) {
-            avatarElement.parentNode.replaceChild(
-                generateAvatar(user.displayName, user.avatarColor),
-                avatarElement
-            );
+    if (!userItem) return;
+    
+    const nameElement = userItem.querySelector('.user-name');
+    if (nameElement) nameElement.textContent = user.displayName;
+    
+    const lastSeenElement = userItem.querySelector('.last-seen');
+    if (lastSeenElement) lastSeenElement.textContent = formatLastSeen(user.lastSeen);
+    
+    const avatarElement = userItem.querySelector('.user-avatar');
+    if (avatarElement) {
+        avatarElement.parentNode.replaceChild(generateAvatar(user.displayName, user.avatarColor), avatarElement);
+    }
+    
+    const unreadCount = userItem.querySelector('.unread-count');
+    if (unreadCount) updateUnreadCount(user.id, unreadCount);
+    
+    if (selectedUser && selectedUser.id === user.id) {
+        selectedUser = user;
+        const displayText = `${user.displayName} (${formatLastSeen(user.lastSeen)})`;
+        if (recipientName) recipientName.textContent = displayText;
+        if (mobileRecipientName) mobileRecipientName.textContent = displayText;
+        if (recipientAvatar) {
+            recipientAvatar.textContent = user.displayName.charAt(0).toUpperCase();
+            recipientAvatar.style.backgroundColor = user.avatarColor;
         }
-        
-        // Update selected user if this user is currently selected
-        if (selectedUser && selectedUser.id === user.id) {
-            selectedUser = user;
-            
-            // Update chat headers
-            if (recipientName) recipientName.textContent = user.displayName;
-            if (mobileRecipientName) mobileRecipientName.textContent = user.displayName;
-            
-            // Update avatars
-            if (recipientAvatar) {
-                recipientAvatar.innerHTML = '';
-                recipientAvatar.appendChild(generateAvatar(user.displayName, user.avatarColor));
-            }
-            
-            if (mobileRecipientAvatar) {
-                mobileRecipientAvatar.innerHTML = '';
-                mobileRecipientAvatar.appendChild(generateAvatar(user.displayName, user.avatarColor));
-            }
+        if (mobileRecipientAvatar) {
+            mobileRecipientAvatar.textContent = user.displayName.charAt(0).toUpperCase();
+            mobileRecipientAvatar.style.backgroundColor = user.avatarColor;
         }
     }
 }
 
-// Remove a user from the users list
 function removeUserFromList(userId) {
     const userItem = document.getElementById(`user-${userId}`);
-    if (userItem) {
-        userItem.remove();
-    }
+    if (userItem) userItem.remove();
     
-    // If this was the selected user, show empty chat
     if (selectedUser && selectedUser.id === userId) {
         selectedUser = null;
         if (activeChat) activeChat.style.display = 'none';
@@ -1842,82 +2057,86 @@ function removeUserFromList(userId) {
     }
 }
 
-// Scroll to bottom of messages
-function scrollToBottom() {
-    if (messagesContainer) {
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
+function updateUnreadCount(userId, unreadCountElement) {
+    if (!currentUser) return;
+    const chatId = [currentUser.uid, userId].sort().join('_');
+    
+    db.collection('chats').doc(chatId).collection('messages')
+        .where('receiverId', '==', currentUser.uid)
+        .where('status', '!=', 'read')
+        .get()
+        .then(snapshot => {
+            const count = snapshot.size;
+            unreadCountElement.textContent = count > 0 ? count : '';
+            unreadCountElement.style.display = count > 0 ? 'inline-block' : 'none';
+        })
+        .catch(error => console.error("Error getting unread count:", error));
 }
 
-// Auth state change listener
+function updateAllUnreadCounts() {
+    if (!usersList || !currentUser) return;
+    
+    const userItems = usersList.querySelectorAll('.user-item');
+    userItems.forEach(item => {
+        const userId = item.id.replace('user-', '');
+        const unreadCountElement = item.querySelector('.unread-count');
+        if (unreadCountElement) updateUnreadCount(userId, unreadCountElement);
+    });
+}
+
+function scrollToBottom() {
+    if (messagesContainer) messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// Auth State Management
 auth.onAuthStateChanged(async user => {
     hideLoader();
     
     if (user) {
         currentUser = user;
         
-        // Hide all auth sections
         if (loginSection) loginSection.style.display = 'none';
         if (signupSection) signupSection.style.display = 'none';
         if (resetPasswordSection) resetPasswordSection.style.display = 'none';
         
         if (!user.emailVerified) {
-            // Show verification section
             if (verificationEmailSpan) verificationEmailSpan.textContent = user.email;
             if (verificationSection) verificationSection.style.display = 'flex';
             return;
         }
         
         try {
-            // Check if user has a profile
             const profileDoc = await db.collection('users').doc(user.uid).get();
-            
             if (profileDoc.exists) {
-                // User has a profile, show chat
                 userProfile = profileDoc.data();
-                
-                // Update header with user info
                 if (userName) userName.textContent = userProfile.displayName;
                 if (userPic) {
                     userPic.innerHTML = '';
                     userPic.appendChild(generateAvatar(userProfile.displayName, userProfile.avatarColor));
                 }
-                
                 if (chatSection) chatSection.style.display = 'flex';
-                
-                // Setup mobile view
                 setupMobileView();
-                
-                // Load users
                 loadUsers();
-                
-                // Setup chat functionality
                 setupChatFunctionality();
+
+                await db.collection('users').doc(user.uid).update({
+                    lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+                });
             } else {
-                // User needs to create a profile
                 if (profileSection) profileSection.style.display = 'flex';
             }
         } catch (error) {
+            console.error('Error loading profile:', error);
             showToast(error.message, 'error');
         }
     } else {
-        // User is signed out
         currentUser = null;
         userProfile = null;
         selectedUser = null;
         
-        // Unsubscribe from listeners
-        if (messagesUnsubscribe) {
-            messagesUnsubscribe();
-            messagesUnsubscribe = null;
-        }
+        if (messagesUnsubscribe) messagesUnsubscribe();
+        if (usersUnsubscribe) usersUnsubscribe();
         
-        if (usersUnsubscribe) {
-            usersUnsubscribe();
-            usersUnsubscribe = null;
-        }
-        
-        // Show login section
         if (chatSection) chatSection.style.display = 'none';
         if (profileSection) profileSection.style.display = 'none';
         if (verificationSection) verificationSection.style.display = 'none';
@@ -1927,15 +2146,11 @@ auth.onAuthStateChanged(async user => {
     }
 });
 
-// Initialize the app
+// Initialization
 document.addEventListener('DOMContentLoaded', function() {
-    // Update avatar preview
     updateAvatarPreview();
-    
-    // Setup mobile view
     setupMobileView();
     
-    // Add mobile-specific CSS
     const mobileStyles = document.createElement('style');
     mobileStyles.textContent = `
         @media (max-width: 768px) {
@@ -1950,66 +2165,61 @@ document.addEventListener('DOMContentLoaded', function() {
                 transform: translateX(100%);
                 transition: transform 0.3s ease;
             }
-            
             .chat-content.active {
                 transform: translateX(0);
             }
-            
-            .mobile-chat-header {
-                display: flex;
-                align-items: center;
-                padding: 10px;
-                background-color: #f5f5f5;
-                border-bottom: 1px solid #ddd;
-            }
-            
-            .back-button {
-                width: 24px;
-                height: 24px;
-                background-color: transparent;
-                border: none;
-                position: relative;
-                margin-right: 10px;
-                cursor: pointer;
-            }
-            
-            .back-button::before,
-            .back-button::after {
-                content: '';
-                position: absolute;
-                width: 12px;
-                height: 2px;
-                background-color: #000;
-                top: 50%;
-                left: 50%;
-            }
-            
-            .back-button::before {
-                transform: translate(-50%, -50%) rotate(45deg);
-            }
-            
-            .back-button::after {
-                transform: translate(-50%, -50%) rotate(-45deg);
-            }
-            
             .input-container {
                 position: fixed;
                 bottom: 0;
                 left: 0;
                 right: 0;
-                padding: 10px;
-                background-color: #fff;
-                border-top: 1px solid #ddd;
-                display: flex;
-                align-items: center;
             }
-            
             .messages-container {
                 padding-bottom: 60px;
             }
         }
     `;
     document.head.appendChild(mobileStyles);
+    
+    const statusStyles = document.createElement('style');
+    statusStyles.textContent = `
+        .message-status {
+            display: inline-block;
+            margin-left: 5px;
+            font-size: 12px;
+        }
+        .message-status.sent { color: #888; }
+        .message-status.delivered { color: #888; }
+        .message-status.read { color: #0084FF; }
+        .message-content { position: relative; display: flex; align-items: flex-start; }
+        .message-text { word-wrap: break-word; flex: 1; margin-right: 24px; }
+        .message-actions { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); opacity: 0; transition: opacity 0.2s ease; }
+        .my-message:hover .message-actions { opacity: 1; }
+        .delete-message-btn { background: none; border: none; cursor: pointer; color: rgba(136, 136, 136, 0.7); padding: 4px; border-radius: 50%; }
+        .delete-message-btn:hover { color: #ff5252; background-color: rgba(0, 0, 0, 0.1); }
+        .delete-dialog { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .delete-options { background-color: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); display: flex; flex-direction: column; min-width: 250px; }
+        .delete-options button { padding: 12px 15px; margin: 5px 0; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 500; }
+        .delete-for-me-btn { background-color: #f1f1f1; color: #333; }
+        .delete-for-me-btn:hover { background-color: #e0e0e0; }
+        .delete-for-everyone-btn { background-color: #ff5252; color: white; }
+        .delete-for-everyone-btn:hover { background-color: #ff3333; }
+        .cancel-delete-btn { background-color: #e0e0e0; color: #333; }
+        .cancel-delete-btn:hover { background-color: #d0d0d0; }
+        .deleted-message-text { font-style: italic; color: #888; }
+        .deleted-for-me { opacity: 0.6; }
+        .loading-messages { text-align: center; padding: 20px; color: #888; }
+        .message-error { text-align: center; padding: 20px; color: #ff5252; }
+        .unread-count { display: inline-block; width: 20px; height: 20px; background-color: #25D366; color: white; border-radius: 50%; text-align: center; line-height: 20px; font-size: 12px; margin-left: 10px; }
+        .last-seen { display: block; font-size: 12px; color: #888; }
+    `;
+    document.head.appendChild(statusStyles);
+    
+    window.showDeleteOptions = showDeleteOptions;
+    window.closeDeleteDialog = closeDeleteDialog;
+    window.deleteMessage = deleteMessage;
+    window.generateAvatar = generateAvatar;
+    window.scrollToBottom = scrollToBottom;
 });
 </script>
 </body>
