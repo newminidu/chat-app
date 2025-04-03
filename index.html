@@ -1096,6 +1096,14 @@ header {
                     <p>Choose someone from the list to start a private conversation</p>
                 </div>
 
+              <div id="delete-dialog" class="delete-dialog" style="display: none;">
+    <div class="delete-options">
+        <button class="delete-for-me-btn" onclick="deleteMessage(event, 'forMe')">Delete for me</button>
+        <button class="delete-for-everyone-btn" onclick="deleteMessage(event, 'forEveryone')">Delete for everyone</button>
+        <button class="cancel-delete-btn" onclick="closeDeleteDialog()">Cancel</button>
+    </div>
+</div>
+
                 <!-- Active chat view (hidden by default) -->
                 <div id="active-chat" style="display: none; flex-direction: column; flex: 1; overflow: hidden;">
                     <!-- Desktop chat header -->
@@ -1681,9 +1689,138 @@ async function sendMessage() {
     }
 }
 
+
+function showDeleteOptions(messageId) {
+    const deleteDialog = document.getElementById('delete-dialog');
+    if (!deleteDialog) return;
+    
+    deleteDialog.dataset.messageId = messageId;
+    deleteDialog.style.display = 'flex';
+}
+
+function closeDeleteDialog() {
+    const deleteDialog = document.getElementById('delete-dialog');
+    if (deleteDialog) {
+        deleteDialog.style.display = 'none';
+        deleteDialog.removeAttribute('data-messageId');
+    }
+}
+
+
+async function deleteMessage(event, type) {
+    event.preventDefault();
+    const deleteDialog = document.getElementById('delete-dialog');
+    if (!deleteDialog || !currentUser || !selectedUser) return;
+
+    const messageId = deleteDialog.dataset.messageId;
+    if (!messageId) return;
+
+    const chatId = [currentUser.uid, selectedUser.id].sort().join('_');
+    const messageRef = db.collection('chats').doc(chatId).collection('messages').doc(messageId);
+
+    try {
+        showLoader();
+        
+        if (type === 'forEveryone') {
+            // Delete for everyone
+            await messageRef.update({
+                isDeleted: true,
+                text: 'This message was deleted',
+                status: 'deleted'
+            });
+        } else {
+            // Delete only for me
+            await db.collection('deletedMessages').add({
+                chatId: chatId,
+                messageId: messageId,
+                userId: currentUser.uid,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            
+            const messageElement = document.querySelector(`.message[data-id="${messageId}"]`);
+            if (messageElement) {
+                messageElement.innerHTML = '<i class="deleted-message-text">This message was deleted</i>';
+                messageElement.classList.add('deleted-for-me');
+            }
+        }
+        
+        closeDeleteDialog();
+        showToast(`Message deleted ${type === 'forEveryone' ? 'for everyone' : 'for you'}`, 'success');
+    } catch (error) {
+        console.error('Error deleting message:', error);
+        showToast(error.message, 'error');
+    } finally {
+        hideLoader();
+    }
+}
 // ... (Keep all other code the same until displayMessage)
 
 // Update displayMessage to return the created element and handle status updates better
+// Add these functions near your other chat functions
+function showDeleteOptions(messageId) {
+    const deleteDialog = document.getElementById('delete-dialog');
+    if (!deleteDialog) return;
+    
+    deleteDialog.dataset.messageId = messageId;
+    deleteDialog.style.display = 'flex';
+}
+
+function closeDeleteDialog() {
+    const deleteDialog = document.getElementById('delete-dialog');
+    if (deleteDialog) {
+        deleteDialog.style.display = 'none';
+        deleteDialog.removeAttribute('data-messageId');
+    }
+}
+
+async function deleteMessage(event, type) {
+    event.preventDefault();
+    const deleteDialog = document.getElementById('delete-dialog');
+    if (!deleteDialog || !currentUser || !selectedUser) return;
+
+    const messageId = deleteDialog.dataset.messageId;
+    if (!messageId) return;
+
+    const chatId = [currentUser.uid, selectedUser.id].sort().join('_');
+    const messageRef = db.collection('chats').doc(chatId).collection('messages').doc(messageId);
+
+    try {
+        showLoader();
+        
+        if (type === 'forEveryone') {
+            // Delete for everyone
+            await messageRef.update({
+                isDeleted: true,
+                text: 'This message was deleted',
+                status: 'deleted'
+            });
+        } else {
+            // Delete only for me
+            await db.collection('deletedMessages').add({
+                chatId: chatId,
+                messageId: messageId,
+                userId: currentUser.uid,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            
+            const messageElement = document.querySelector(`.message[data-id="${messageId}"]`);
+            if (messageElement) {
+                messageElement.innerHTML = '<i class="deleted-message-text">This message was deleted</i>';
+                messageElement.classList.add('deleted-for-me');
+            }
+        }
+        
+        closeDeleteDialog();
+        showToast(`Message deleted ${type === 'forEveryone' ? 'for everyone' : 'for you'}`, 'success');
+    } catch (error) {
+        console.error('Error deleting message:', error);
+        showToast(error.message, 'error');
+    } finally {
+        hideLoader();
+    }
+}
+
+// Update the displayMessage function to properly handle delete button
 function displayMessage(message, isNew = false) {
     if (!messagesContainer || !currentUser) return null;
     
@@ -1696,52 +1833,52 @@ function displayMessage(message, isNew = false) {
     messageDiv.dataset.id = message.id;
     
     const timestamp = message.timestamp ? message.timestamp.toDate() : new Date();
-    const time = timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const time = timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit'}) ;
     
     const isMine = message.senderId === currentUser.uid;
     let senderName = isMine ? (userProfile?.displayName || 'Me') : (selectedUser?.displayName || 'User');
     let senderColor = isMine ? (userProfile?.avatarColor || '#128C7E') : (selectedUser?.avatarColor || '#128C7E');
     
     let statusHTML = '';
-    if (isMine) {
-        if (message.isDeleted) {
-            statusHTML = '<span class="message-deleted">Deleted</span>';
-        } else {
-            switch(message.status) {
-                case 'sent': statusHTML = '<span class="message-status sent">✓</span>'; break;
-                case 'delivered': statusHTML = '<span class="message-status delivered">✓✓</span>'; break;
-                case 'read': statusHTML = '<span class="message-status read">✓✓</span>'; break;
-            }
+    if (isMine && !message.isDeleted) {
+        switch(message.status) {
+            case 'sent': statusHTML = '<span class="message-status sent">✓</span>'; break;
+            case 'delivered': statusHTML = '<span class="message-status delivered">✓✓</span>'; break;
+            case 'read': statusHTML = '<span class="message-status read">✓✓</span>'; break;
         }
     }
-    
-    let messageContent = message.isDeleted ? 
-        '<i class="deleted-message-text">This message was deleted</i>' :
-        (isMine ? `
-            <div class="message-text">${message.text}</div>
-            <div class="message-actions">
-                <button class="delete-message-btn" onclick="showDeleteOptions('${message.id}')">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="3 6 5 6 21 6"></polyline>
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                    </svg>
-                </button>
-            </div>
-        ` : `<div class="message-text">${message.text}</div>`);
     
     messageDiv.innerHTML = isMine ? `
         <div class="message-header">
             <span class="message-time">${time}</span>
             ${statusHTML}
         </div>
-        <div class="message-content">${messageContent}</div>
+        <div class="message-content">
+            ${message.isDeleted ? 
+                '<i class="deleted-message-text">This message was deleted</i>' :
+                `<div class="message-text">${message.text}</div>
+                <div class="message-actions">
+                    <button class="delete-message-btn" onclick="showDeleteOptions('${message.id}')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                    </button>
+                </div>`
+            }
+        </div>
     ` : `
         <div class="message-header">
             <div class="user-avatar" style="background-color: ${senderColor};">${senderName.charAt(0).toUpperCase()}</div>
             <span class="message-sender">${senderName}</span>
             <span class="message-time">${time}</span>
         </div>
-        <div class="message-content">${messageContent}</div>
+        <div class="message-content">
+            ${message.isDeleted ? 
+                '<i class="deleted-message-text">This message was deleted</i>' : 
+                `<div class="message-text">${message.text}</div>`
+            }
+        </div>
     `;
     
     messagesContainer.appendChild(messageDiv);
@@ -1754,8 +1891,7 @@ function displayMessage(message, isNew = false) {
     }
     
     if (isNew) scrollToBottom();
-    
-    return messageDiv; // Return the element for potential updates
+    return messageDiv;
 }
 
 // Update selectUser to handle real-time status updates properly
