@@ -43,25 +43,23 @@
       name="twitter:image"
       content="https://www.yourwebsite.com/images/twitter-image.jpg"
     />
+
     <style>
       :root {
-        /* WhatsApp-inspired color scheme */
-        --primary-color: #128c7e; /* WhatsApp teal */
-        --bg-color: #ffffff; /* White background */
-        --secondary-bg: #ededed; /* Light gray for header/sidebar */
-        --text-color: #3b4a54; /* Dark gray for text */
-        --secondary-text: #667781; /* Medium gray for secondary text */
-        --message-bg: #e2f7cb; /* Light green for outgoing messages */
-        --other-message-bg: #ffffff; /* White for incoming messages */
-        --input-bg: #f0f2f5; /* Light gray for input area */
+        --primary-color: #128c7e;
+        --bg-color: #ffffff;
+        --secondary-bg: #ededed;
+        --text-color: #3b4a54;
+        --secondary-text: #667781;
+        --message-bg: #e2f7cb;
+        --other-message-bg: #ffffff;
+        --input-bg: #f0f2f5;
         --sender-bg: rgba(18, 140, 126, 0.15);
         --error-color: #f15c6d;
-        --success-color: #25d366; /* WhatsApp green */
+        --success-color: #25d366;
         --warning-color: #ffc300;
-        --chat-bg: #e5ddd5; /* Textured background */
+        --chat-bg: #e5ddd5;
         --chat-bg-pattern: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636 32.636 2.05 38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%239C92AC' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
-
-        /* Advanced styling variables */
         --border-radius-sm: 8px;
         --border-radius-lg: 12px;
         --border-radius-xl: 18px;
@@ -86,20 +84,18 @@
         min-height: 100vh;
         display: flex;
         flex-direction: column;
-        overflow: hidden; /* Prevent body scrolling */
+        overflow: hidden;
       }
 
-      /* Container */
       .app-container {
         display: flex;
         flex-direction: column;
-        height: 100vh; /* Full viewport height */
-        width: 100vw; /* Full viewport width */
+        height: 100vh;
+        width: 100vw;
         background-color: var(--bg-color);
-        overflow: hidden; /* Prevent container scrolling */
+        overflow: hidden;
       }
 
-      /* Header - WhatsApp style */
       header {
         background-color: #128c7e;
         padding: 12px 16px;
@@ -108,7 +104,7 @@
         align-items: center;
         box-shadow: var(--box-shadow);
         color: white;
-        z-index: 10; /* Ensure header stays on top */
+        z-index: 10;
       }
 
       .logo {
@@ -142,7 +138,7 @@
         border-radius: 50%;
         object-fit: cover;
         border: 2px solid rgba(255, 255, 255, 0.2);
-        background-color: #075e54; /* Darker WhatsApp color for avatar background */
+        background-color: #075e54;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -171,7 +167,6 @@
         background-color: rgba(255, 255, 255, 0.3);
       }
 
-      /* Auth Section */
       .auth-container {
         flex: 1;
         display: flex;
@@ -184,8 +179,8 @@
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-        background-color: var(--bg-color); /* Fallback if image fails to load */
-        overflow-y: auto; /* Allow scrolling for smaller screens */
+        background-color: var(--bg-color);
+        overflow-y: auto;
       }
 
       .auth-card {
@@ -297,7 +292,6 @@
         border-radius: var(--border-radius-sm);
       }
 
-      /* Profile Setup */
       .profile-setup {
         display: flex;
         flex-direction: column;
@@ -323,7 +317,7 @@
         font-size: 32px;
         color: white;
         overflow: hidden;
-        cursor: pointer; /* Indicate it's clickable */
+        cursor: pointer;
         position: relative;
       }
 
@@ -345,16 +339,14 @@
         opacity: 1;
       }
 
-      /* Chat Section - WhatsApp style */
       .chat-container {
         display: flex;
         flex: 1;
         overflow: hidden;
         background-color: var(--bg-color);
-        position: relative; /* For positioning fixed elements relative to this container */
+        position: relative;
       }
 
-      /* Sidebar - WhatsApp style */
       .users-sidebar {
         width: 280px;
         background-color: white;
@@ -362,7 +354,7 @@
         display: flex;
         flex-direction: column;
         height: 100%;
-        overflow: hidden; /* Control overflow */
+        overflow: hidden;
       }
 
       .sidebar-header {
@@ -373,7 +365,7 @@
         font-size: 14px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        z-index: 2; /* Keep header above the list */
+        z-index: 2;
       }
 
       .users-list {
@@ -424,9 +416,9 @@
         font-weight: bold;
         font-size: 18px;
         color: white;
-        background-color: #075e54; /* Darker WhatsApp color for avatar background */
+        background-color: #075e54;
         text-transform: uppercase;
-        flex-shrink: 0; /* Prevent avatar from shrinking */
+        flex-shrink: 0;
       }
 
       .user-name {
@@ -444,10 +436,9 @@
         height: 12px;
         border-radius: 50%;
         background-color: var(--success-color);
-        flex-shrink: 0; /* Prevent status from shrinking */
+        flex-shrink: 0;
       }
 
-      /* Chat Content - WhatsApp style */
       .chat-content {
         flex: 1;
         display: flex;
@@ -456,7 +447,7 @@
         height: 100%;
         background-color: var(--chat-bg);
         background-image: var(--chat-bg-pattern);
-        overflow: hidden; /* Control overflow */
+        overflow: hidden;
       }
 
       .chat-header {
@@ -466,7 +457,7 @@
         display: flex;
         align-items: center;
         gap: 12px;
-        z-index: 2; /* Keep header above messages */
+        z-index: 2;
       }
 
       .chat-recipient {
@@ -496,7 +487,6 @@
         opacity: 0.8;
       }
 
-      /* Messages - WhatsApp style */
       .messages-container {
         flex: 1;
         overflow-y: auto;
@@ -506,9 +496,7 @@
         gap: 8px;
         scrollbar-width: thin;
         scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
-        height: calc(
-          100% - 110px
-        ); /* Adjusted to account for header and input */
+        height: calc(100% - 110px);
         position: relative;
       }
 
@@ -619,7 +607,6 @@
         line-height: 1.4;
       }
 
-      /* Input Section - Fixed at bottom - WhatsApp style */
       .input-container {
         position: sticky;
         bottom: 0;
@@ -664,16 +651,9 @@
         align-items: center;
         cursor: pointer;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        flex-shrink: 0; /* Prevent button from shrinking */
+        flex-shrink: 0;
       }
 
-      .send-btn svg {
-        width: 20px;
-        height: 20px;
-        fill: white;
-      }
-
-      /* Add SVG icons for send button instead of using ::before */
       .send-btn::after {
         content: "";
         display: inline-block;
@@ -693,7 +673,6 @@
         cursor: not-allowed;
       }
 
-      /* Loader */
       .loader-overlay {
         position: fixed;
         top: 0;
@@ -725,7 +704,6 @@
         }
       }
 
-      /* Toast Notification - WhatsApp style */
       .toast {
         position: fixed;
         top: 20px;
@@ -765,56 +743,50 @@
         }
       }
 
-      /* Unread count for user list (e.g., sidebar) */
       .unread-count {
         display: inline-block;
         width: 20px;
         height: 20px;
-        background-color: #25d366; /* WhatsApp green */
+        background-color: #25d366;
         color: white;
         border-radius: 50%;
         text-align: center;
-        line-height: 20px; /* Vertically centers the text */
+        line-height: 20px;
         font-size: 12px;
         font-weight: 500;
-        margin-left: 10px; /* Spacing from the user name */
-        visibility: hidden; /* Hidden by default, shown when count > 0 */
+        margin-left: 10px;
+        visibility: hidden;
       }
 
-      /* Unread count for individual received messages in the chat */
       .unread-message-count {
         display: inline-block;
         width: 20px;
         height: 20px;
-        background-color: #25d366; /* WhatsApp green */
+        background-color: #25d366;
         color: white;
         border-radius: 50%;
         text-align: center;
-        line-height: 20px; /* Vertically centers the text */
+        line-height: 20px;
         font-size: 12px;
         font-weight: 500;
-        margin-left: 5px; /* Closer spacing for messages */
+        margin-left: 5px;
       }
 
-      /* Ensure visibility when there are unread messages */
       .unread-count.active,
       .unread-message-count.active {
         visibility: visible;
       }
 
-      /* Optional hover effect for interactivity */
       .unread-count:hover,
       .unread-message-count:hover {
-        background-color: #1ebe57; /* Slightly darker green on hover */
+        background-color: #1ebe57;
         transition: background-color 0.2s ease;
       }
 
-      /* Positioning within message header */
       .message-header .unread-message-count {
-        vertical-align: middle; /* Aligns with text in the header */
+        vertical-align: middle;
       }
 
-      /* Ensure unread count doesn't interfere with layout */
       .user-item {
         position: relative;
         display: flex;
@@ -825,10 +797,9 @@
       .message-header {
         display: flex;
         align-items: center;
-        gap: 5px; /* Spacing between elements */
+        gap: 5px;
       }
 
-      /* MOBILE SPECIFIC STYLES - WhatsApp Mobile look */
       @media (max-width: 768px) {
         .users-sidebar {
           width: 100%;
@@ -839,7 +810,6 @@
           transition: transform 0.3s ease;
         }
 
-        /* Fixed chat-content positioning for mobile */
         .chat-content {
           width: 100%;
           position: absolute;
@@ -850,15 +820,13 @@
           transition: transform 0.3s ease;
           display: flex;
           flex-direction: column;
-          height: 100%; /* Full height */
+          height: 100%;
         }
 
-        /* When chat is active */
         .chat-content.active {
           transform: translateX(0);
         }
 
-        /* Mobile chat header */
         .mobile-chat-header {
           background-color: var(--primary-color);
           color: white;
@@ -890,7 +858,6 @@
           background-position: center;
         }
 
-        /* Mobile message input container - fixed at bottom */
         .input-container {
           position: fixed;
           bottom: 0;
@@ -901,32 +868,25 @@
           z-index: 25;
         }
 
-        /* Adjust message container height for mobile */
         .messages-container {
-          height: calc(
-            100% - 115px
-          ); /* Adjust height to fit between header and input */
-          padding-bottom: 60px; /* Add extra padding to avoid messages being hidden behind input */
+          height: calc(100% - 115px);
+          padding-bottom: 60px;
         }
 
-        /* Hide desktop chat header on mobile */
         #chat-header {
           display: none !important;
         }
 
-        /* Show mobile header instead */
         .mobile-chat-header {
           display: flex !important;
         }
 
-        /* Adjust active chat to properly fit mobile layout */
         #active-chat {
           height: 100vh !important;
           width: 100% !important;
         }
       }
 
-      /* Extra small devices */
       @media (max-width: 480px) {
         header {
           padding: 10px 12px;
@@ -969,26 +929,19 @@
           height: 36px;
         }
 
-        /* Ensure message input stays visible when keyboard is open */
         body.keyboard-open .input-container {
           position: fixed;
           bottom: 0;
         }
 
-        /* Adjust content for better spacing */
         .username {
-          display: none; /* Hide username on very small screens */
+          display: none;
         }
       }
 
       .footer {
-        background-color: rgba(
-          var(--secondary-bg-rgb, 255, 255, 255, 0.8)
-        ); /* Transparent background */
-        /* Alternative if CSS variables aren't RGB format: background-color: rgba(255, 255, 255, 0.8); */
-        backdrop-filter: blur(
-          5px
-        ); /* Optional: adds a nice blur effect behind */
+        background-color: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(5px);
         padding: 12px 16px;
         text-align: center;
         font-size: 13px;
@@ -1001,7 +954,6 @@
         display: block;
       }
 
-      /* Specific styling for authentication container */
       .auth-container .footer {
         position: fixed;
         bottom: 0;
@@ -1058,7 +1010,6 @@
         background-color: #0e796e;
       }
 
-      /* Update for mobile */
       @media (max-width: 768px) {
         .footer {
           padding: 10px;
@@ -1066,9 +1017,7 @@
           bottom: 0;
           left: 0;
           right: 0;
-          background-color: rgba(
-            var(--secondary-bg-rgb, 255, 255, 255, 0.8)
-          ); /* Maintain transparency */
+          background-color: rgba(255, 255, 255, 0.8);
         }
       }
     </style>
@@ -2441,6 +2390,16 @@
               required
             />
           </div>
+          <div class="form-group">
+            <label for="signup-phone" class="form-label">Phone Number</label>
+            <input
+              type="tel"
+              id="signup-phone"
+              class="form-input"
+              placeholder="9471XXXXXXX"
+              required
+            />
+          </div>
           <div id="signup-error" class="auth-error" style="display: none"></div>
           <button type="submit" id="signup-btn" class="auth-btn">
             Sign Up
@@ -2461,8 +2420,8 @@
           <span id="verification-email"></span>
         </p>
         <p>
-          Please check your inbox and click on the link to verify your email
-          address. If you don't see the email, check your spam folder.
+          Please check your inbox and click the link to verify your email
+          address.
         </p>
         <div class="form-group">
           <button id="check-verification-btn" class="auth-btn">
@@ -2474,6 +2433,37 @@
           <button id="logout-from-verification-btn" class="auth-btn">
             Use Another Account
           </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- OTP Verification Section -->
+    <div
+      id="otp-verification-section"
+      class="auth-container"
+      style="display: none"
+    >
+      <div class="auth-card">
+        <h1 class="auth-title">Verify Your Phone Number</h1>
+        <p>We have sent an OTP to your phone number. Please enter it below.</p>
+        <form id="otp-form" class="auth-form">
+          <div class="form-group">
+            <label for="otp-code" class="form-label">OTP Code</label>
+            <input
+              type="text"
+              id="otp-code"
+              class="form-input"
+              placeholder="Enter 6-digit OTP"
+              required
+            />
+          </div>
+          <div id="otp-error" class="auth-error" style="display: none"></div>
+          <button type="submit" id="verify-otp-btn" class="auth-btn">
+            Verify OTP
+          </button>
+        </form>
+        <div class="auth-switch">
+          <a id="resend-otp">Resend OTP</a>
         </div>
       </div>
     </div>
@@ -2564,28 +2554,12 @@
       </header>
 
       <div class="chat-container">
-        <!-- Users sidebar -->
         <div class="users-sidebar">
           <div class="sidebar-header">All Users</div>
-          <div id="users-list" class="users-list">
-            <!-- Users will be added here dynamically -->
-            <!-- Example user item -->
-            <div class="user-item">
-              <div class="user-avatar">JD</div>
-              <div class="user-name">John Doe</div>
-              <div class="user-status"></div>
-            </div>
-            <div class="user-item">
-              <div class="user-avatar">JS</div>
-              <div class="user-name">Jane Smith</div>
-              <div class="user-status"></div>
-            </div>
-          </div>
+          <div id="users-list" class="users-list"></div>
         </div>
 
-        <!-- Chat content -->
         <div class="chat-content">
-          <!-- Empty chat view (shown when no chat is selected) -->
           <div id="empty-chat" class="empty-chat">
             <div class="empty-chat-icon">💬</div>
             <h3>Select a user to start chatting</h3>
@@ -2612,7 +2586,6 @@
             </div>
           </div>
 
-          <!-- Active chat view (hidden by default) -->
           <div
             id="active-chat"
             style="
@@ -2622,13 +2595,10 @@
               overflow: hidden;
             "
           >
-            <!-- Desktop chat header -->
             <div id="chat-header" class="chat-header">
               <div id="recipient-avatar" class="user-avatar">JD</div>
               <span id="recipient-name" class="chat-recipient">John Doe</span>
             </div>
-
-            <!-- Mobile chat header -->
             <div class="mobile-chat-header" style="display: none">
               <button class="back-button"></button>
               <div id="mobile-recipient-avatar" class="user-avatar">JD</div>
@@ -2636,31 +2606,7 @@
                 John Doe
               </div>
             </div>
-
-            <div id="messages" class="messages-container">
-              <!-- Messages will be added here dynamically -->
-              <!-- Example messages -->
-              <div class="message other-message">
-                <div class="message-header">
-                  <div class="message-pic">JD</div>
-                  <div class="message-sender">John Doe</div>
-                  <div class="message-time">10:30 AM</div>
-                </div>
-                <div class="message-content">
-                  Hi there! How are you doing today?
-                </div>
-              </div>
-
-              <div class="message my-message">
-                <div class="message-header">
-                  <div class="message-time">10:32 AM</div>
-                </div>
-                <div class="message-content">
-                  I'm doing great, thanks for asking! How about you?
-                </div>
-              </div>
-            </div>
-
+            <div id="messages" class="messages-container"></div>
             <div class="input-container">
               <input
                 type="text"
@@ -2676,29 +2622,21 @@
       </div>
     </div>
 
-    <!-- Loading overlay -->
+    <!-- Loading Overlay -->
     <div id="loader-overlay" class="loader-overlay" style="display: none">
       <div class="loader"></div>
     </div>
 
-    <!-- Toast notification container -->
-    <div id="toast-container" style="display: none">
-      <!-- Toast messages will be added here dynamically -->
-      <!-- Example toast -->
-      <div class="toast success">Message sent successfully!</div>
-    </div>
+    <!-- Toast Notification Container -->
+    <div id="toast-container" style="display: none"></div>
 
     <!-- Firebase SDK -->
-    <script
-      data-cfasync="false"
-      src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
-    ></script>
     <script src="https://www.gstatic.com/firebasejs/9.19.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.19.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.19.1/firebase-firestore-compat.js"></script>
 
     <script>
-      // Firebase configuration
+      // Firebase Configuration
       const firebaseConfig = {
         apiKey: "AIzaSyAK-NzCqQSCiLn5WSSf-5tWbsO5nSyubEk",
         authDomain: "best-msg-4cb83.firebaseapp.com",
@@ -2710,8 +2648,6 @@
 
       // Initialize Firebase
       firebase.initializeApp(firebaseConfig);
-
-      // Get references to Firebase services
       const auth = firebase.auth();
       const db = firebase.firestore();
 
@@ -2720,6 +2656,9 @@
       const signupSection = document.getElementById("signup-section");
       const verificationSection = document.getElementById(
         "verification-section"
+      );
+      const otpVerificationSection = document.getElementById(
+        "otp-verification-section"
       );
       const resetPasswordSection = document.getElementById(
         "reset-password-section"
@@ -2737,6 +2676,7 @@
       const signupEmail = document.getElementById("signup-email");
       const signupPassword = document.getElementById("signup-password");
       const signupConfirm = document.getElementById("signup-confirm");
+      const signupPhone = document.getElementById("signup-phone");
       const signupError = document.getElementById("signup-error");
 
       const verificationEmailSpan =
@@ -2750,6 +2690,11 @@
       const logoutFromVerificationBtn = document.getElementById(
         "logout-from-verification-btn"
       );
+
+      const otpForm = document.getElementById("otp-form");
+      const otpCodeInput = document.getElementById("otp-code");
+      const otpError = document.getElementById("otp-error");
+      const resendOtp = document.getElementById("resend-otp");
 
       const resetPasswordForm = document.getElementById("reset-password-form");
       const resetEmail = document.getElementById("reset-email");
@@ -2784,7 +2729,7 @@
       const backButton = document.querySelector(".back-button");
       const mobileChatHeader = document.querySelector(".mobile-chat-header");
 
-      // Global variables
+      // Global Variables
       let currentUser = null;
       let userProfile = null;
       let selectedUser = null;
@@ -2835,13 +2780,14 @@
         if (resetError) resetError.style.display = "none";
         if (resetSuccess) resetSuccess.style.display = "none";
         if (profileError) profileError.style.display = "none";
+        if (otpError) otpError.style.display = "none";
       }
 
       function formatLastSeen(timestamp) {
         if (!timestamp) return "Last seen: Unknown";
         const date = timestamp.toDate();
         const now = new Date();
-        const diff = Math.floor((now - date) / 1000 / 60); // Difference in minutes
+        const diff = Math.floor((now - date) / 1000 / 60);
         if (diff < 1) return "Online";
         if (diff < 60)
           return `Last seen: ${diff} min${diff > 1 ? "s" : ""} ago`;
@@ -2853,6 +2799,48 @@
           [],
           { hour: "2-digit", minute: "2-digit" }
         )}`;
+      }
+
+      // SMS Gateway Functions
+      async function sendSMS(to, message) {
+        const userId = "29318"; // Replace with your Notify.lk user ID
+        const apiKey = "g9s0WKlpTNpXUDXYwBgX"; // Replace with your Notify.lk API key
+        const senderId = "Messageium";
+        const url = "https://app.notify.lk/api/v1/send";
+
+        const formData = new URLSearchParams();
+        formData.append("user_id", userId);
+        formData.append("api_key", apiKey);
+        formData.append("sender_id", senderId);
+        formData.append("to", to);
+        formData.append("message", message);
+
+        try {
+          const response = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: formData,
+          });
+          const data = await response.json();
+          if (data.status !== "success") throw new Error("Failed to send SMS");
+        } catch (error) {
+          console.error("Error sending SMS:", error);
+          showToast("Failed to send SMS. Please try again.", "error");
+          throw error;
+        }
+      }
+
+      async function sendOTP(userId, phone) {
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const expiration = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+
+        await db.collection("users").doc(userId).update({
+          otpCode: otp,
+          otpExpiration: expiration,
+        });
+
+        const message = `Your one-time password is ${otp}.This code will expire in 5 minutes For security reasons.`;
+        await sendSMS(phone, message);
       }
 
       // Navigation and Setup
@@ -2933,7 +2921,7 @@
         if (!chatContent) return;
 
         userItems.forEach((item) => {
-          item.removeEventListener("click", handleUserItemClick); // Remove existing listeners
+          item.removeEventListener("click", handleUserItemClick);
           item.addEventListener("click", handleUserItemClick);
         });
 
@@ -2984,8 +2972,9 @@
           const email = signupEmail?.value.trim() || "";
           const password = signupPassword?.value || "";
           const confirm = signupConfirm?.value || "";
+          const phone = signupPhone?.value.trim() || "";
 
-          if (!email || !password || !confirm) {
+          if (!email || !password || !confirm || !phone) {
             if (signupError) {
               signupError.textContent = "Please fill out all fields";
               signupError.style.display = "block";
@@ -3010,6 +2999,15 @@
             return;
           }
 
+          if (!/^94\d{9}$/.test(phone)) {
+            if (signupError) {
+              signupError.textContent =
+                "Phone number must be in the format 9471XXXXXXX";
+              signupError.style.display = "block";
+            }
+            return;
+          }
+
           showLoader();
 
           try {
@@ -3018,6 +3016,12 @@
               password
             );
             await userCredential.user.sendEmailVerification();
+            await db.collection("users").doc(userCredential.user.uid).set({
+              email: email,
+              phone: phone,
+              phoneVerified: false,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
             if (verificationEmailSpan)
               verificationEmailSpan.textContent = email;
             if (signupSection) signupSection.style.display = "none";
@@ -3033,51 +3037,30 @@
         });
       }
 
-      if (resetPasswordForm) {
-        resetPasswordForm.addEventListener("submit", async (e) => {
-          e.preventDefault();
-          clearFormErrors();
-
-          const email = resetEmail?.value.trim() || "";
-
-          if (!email) {
-            if (resetError) {
-              resetError.textContent = "Please enter your email address";
-              resetError.style.display = "block";
-            }
-            return;
-          }
-
-          showLoader();
-
-          try {
-            await auth.sendPasswordResetEmail(email);
-            if (resetSuccess) {
-              resetSuccess.textContent =
-                "Password reset link sent to your email";
-              resetSuccess.style.display = "block";
-            }
-            if (resetEmail) resetEmail.value = "";
-            hideLoader();
-          } catch (error) {
-            hideLoader();
-            if (resetError) {
-              resetError.textContent = error.message;
-              resetError.style.display = "block";
-            }
-          }
-        });
-      }
-
       if (checkVerificationBtn) {
         checkVerificationBtn.addEventListener("click", async () => {
           showLoader();
           try {
             await auth.currentUser.reload();
             if (auth.currentUser.emailVerified) {
-              if (verificationSection)
-                verificationSection.style.display = "none";
-              if (profileSection) profileSection.style.display = "flex";
+              const userDoc = await db
+                .collection("users")
+                .doc(auth.currentUser.uid)
+                .get();
+              if (userDoc.exists) {
+                const userData = userDoc.data();
+                if (userData.phoneVerified) {
+                  if (verificationSection)
+                    verificationSection.style.display = "none";
+                  if (profileSection) profileSection.style.display = "flex";
+                } else {
+                  await sendOTP(auth.currentUser.uid, userData.phone);
+                  if (verificationSection)
+                    verificationSection.style.display = "none";
+                  if (otpVerificationSection)
+                    otpVerificationSection.style.display = "flex";
+                }
+              }
             } else {
               showToast(
                 "Your email is not verified yet. Please check your inbox.",
@@ -3119,6 +3102,117 @@
         });
       }
 
+      if (otpForm) {
+        otpForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          clearFormErrors();
+          const otp = otpCodeInput?.value.trim() || "";
+
+          if (!otp || otp.length !== 6) {
+            if (otpError) {
+              otpError.textContent = "Please enter a valid 6-digit OTP";
+              otpError.style.display = "block";
+            }
+            return;
+          }
+
+          showLoader();
+          try {
+            const userDoc = await db
+              .collection("users")
+              .doc(auth.currentUser.uid)
+              .get();
+            if (userDoc.exists) {
+              const userData = userDoc.data();
+              const now = new Date();
+              if (
+                userData.otpCode === otp &&
+                userData.otpExpiration &&
+                userData.otpExpiration.toDate() > now
+              ) {
+                await db.collection("users").doc(auth.currentUser.uid).update({
+                  phoneVerified: true,
+                  otpCode: firebase.firestore.FieldValue.delete(),
+                  otpExpiration: firebase.firestore.FieldValue.delete(),
+                });
+                await sendSMS(
+                  userData.phone,
+                  "Thank you for registering with Messageium!"
+                );
+                if (otpVerificationSection)
+                  otpVerificationSection.style.display = "none";
+                if (profileSection) profileSection.style.display = "flex";
+              } else {
+                if (otpError) {
+                  otpError.textContent = "Invalid or expired OTP";
+                  otpError.style.display = "block";
+                }
+              }
+            }
+            hideLoader();
+          } catch (error) {
+            hideLoader();
+            showToast(error.message, "error");
+          }
+        });
+      }
+
+      if (resendOtp) {
+        resendOtp.addEventListener("click", async () => {
+          showLoader();
+          try {
+            const userDoc = await db
+              .collection("users")
+              .doc(auth.currentUser.uid)
+              .get();
+            if (userDoc.exists) {
+              await sendOTP(auth.currentUser.uid, userDoc.data().phone);
+              showToast("OTP resent successfully", "success");
+            }
+            hideLoader();
+          } catch (error) {
+            hideLoader();
+            showToast(error.message, "error");
+          }
+        });
+      }
+
+      if (resetPasswordForm) {
+        resetPasswordForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          clearFormErrors();
+
+          const email = resetEmail?.value.trim() || "";
+
+          if (!email) {
+            if (resetError) {
+              resetError.textContent = "Please enter your email address";
+              resetError.style.display = "block";
+            }
+            return;
+          }
+
+          showLoader();
+
+          try {
+            await auth.sendPasswordResetEmail(email);
+            if (resetSuccess) {
+              resetSuccess.textContent =
+                "Password reset link sent to your email";
+              resetSuccess.style.display = "block";
+            }
+            if (resetEmail) resetEmail.value = "";
+            hideLoader();
+          } catch (error) {
+            hideLoader();
+            if (resetError) {
+              resetError.textContent = error.message;
+              resetError.style.display = "block";
+            }
+          }
+        });
+      }
+
       if (profileForm) {
         profileForm.addEventListener("submit", async (e) => {
           e.preventDefault();
@@ -3138,14 +3232,11 @@
           showLoader();
 
           try {
-            await db.collection("users").doc(auth.currentUser.uid).set({
+            await db.collection("users").doc(auth.currentUser.uid).update({
               displayName: name,
               avatarColor: color,
-              email: auth.currentUser.email,
-              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
               lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
             });
-
             if (profileSection) profileSection.style.display = "none";
             if (chatSection) chatSection.style.display = "flex";
             hideLoader();
@@ -3303,92 +3394,12 @@
           showLoader();
 
           if (type === "forEveryone") {
-            // Delete for everyone
             await messageRef.update({
               isDeleted: true,
               text: "This message was deleted",
               status: "deleted",
             });
           } else {
-            // Delete only for me
-            await db.collection("deletedMessages").add({
-              chatId: chatId,
-              messageId: messageId,
-              userId: currentUser.uid,
-              timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            });
-
-            const messageElement = document.querySelector(
-              `.message[data-id="${messageId}"]`
-            );
-            if (messageElement) {
-              messageElement.innerHTML =
-                '<i class="deleted-message-text">This message was deleted</i>';
-              messageElement.classList.add("deleted-for-me");
-            }
-          }
-
-          closeDeleteDialog();
-          showToast(
-            `Message deleted ${
-              type === "forEveryone" ? "for everyone" : "for you"
-            }`,
-            "success"
-          );
-        } catch (error) {
-          console.error("Error deleting message:", error);
-          showToast(error.message, "error");
-        } finally {
-          hideLoader();
-        }
-      }
-      // ... (Keep all other code the same until displayMessage)
-
-      // Update displayMessage to return the created element and handle status updates better
-      // Add these functions near your other chat functions
-      function showDeleteOptions(messageId) {
-        const deleteDialog = document.getElementById("delete-dialog");
-        if (!deleteDialog) return;
-
-        deleteDialog.dataset.messageId = messageId;
-        deleteDialog.style.display = "flex";
-      }
-
-      function closeDeleteDialog() {
-        const deleteDialog = document.getElementById("delete-dialog");
-        if (deleteDialog) {
-          deleteDialog.style.display = "none";
-          deleteDialog.removeAttribute("data-messageId");
-        }
-      }
-
-      async function deleteMessage(event, type) {
-        event.preventDefault();
-        const deleteDialog = document.getElementById("delete-dialog");
-        if (!deleteDialog || !currentUser || !selectedUser) return;
-
-        const messageId = deleteDialog.dataset.messageId;
-        if (!messageId) return;
-
-        const chatId = [currentUser.uid, selectedUser.id].sort().join("_");
-        const messageRef = db
-          .collection("chats")
-          .doc(chatId)
-          .collection("messages")
-          .doc(messageId);
-
-        try {
-          showLoader();
-
-          if (type === "forEveryone") {
-            // Delete for everyone
-            await messageRef.update({
-              isDeleted: true,
-              text: "This message was deleted",
-              status: "deleted",
-            });
-          } else {
-            // Delete only for me
             await db.collection("deletedMessages").add({
               chatId: chatId,
               messageId: messageId,
@@ -3421,7 +3432,6 @@
         }
       }
 
-      // Update the displayMessage function to properly handle delete button
       function displayMessage(message, isNew = false) {
         if (!messagesContainer || !currentUser) return null;
 
@@ -3468,42 +3478,42 @@
 
         messageDiv.innerHTML = isMine
           ? `
-        <div class="message-header">
-            <span class="message-time">${time}</span>
-            ${statusHTML}
-        </div>
-        <div class="message-content">
-            ${
-              message.isDeleted
-                ? '<i class="deleted-message-text">This message was deleted</i>'
-                : `<div class="message-text">${message.text}</div>
-                <div class="message-actions">
-                    <button class="delete-message-btn" onclick="showDeleteOptions('${message.id}')">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="3 6 5 6 21 6"></polyline>
-                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                        </svg>
-                    </button>
-                </div>`
-            }
-        </div>
-    `
+            <div class="message-header">
+                <span class="message-time">${time}</span>
+                ${statusHTML}
+            </div>
+            <div class="message-content">
+                ${
+                  message.isDeleted
+                    ? '<i class="deleted-message-text">This message was deleted</i>'
+                    : `<div class="message-text">${message.text}</div>
+                       <div class="message-actions">
+                           <button class="delete-message-btn" onclick="showDeleteOptions('${message.id}')">
+                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                   <polyline points="3 6 5 6 21 6"></polyline>
+                                   <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                               </svg>
+                           </button>
+                       </div>`
+                }
+            </div>
+          `
           : `
-        <div class="message-header">
-            <div class="user-avatar" style="background-color: ${senderColor};">${senderName
+            <div class="message-header">
+                <div class="user-avatar" style="background-color: ${senderColor};">${senderName
               .charAt(0)
               .toUpperCase()}</div>
-            <span class="message-sender">${senderName}</span>
-            <span class="message-time">${time}</span>
-        </div>
-        <div class="message-content">
-            ${
-              message.isDeleted
-                ? '<i class="deleted-message-text">This message was deleted</i>'
-                : `<div class="message-text">${message.text}</div>`
-            }
-        </div>
-    `;
+                <span class="message-sender">${senderName}</span>
+                <span class="message-time">${time}</span>
+            </div>
+            <div class="message-content">
+                ${
+                  message.isDeleted
+                    ? '<i class="deleted-message-text">This message was deleted</i>'
+                    : `<div class="message-text">${message.text}</div>`
+                }
+            </div>
+          `;
 
         messagesContainer.appendChild(messageDiv);
 
@@ -3527,160 +3537,6 @@
         if (isNew) scrollToBottom();
         return messageDiv;
       }
-
-      // Update selectUser to handle real-time status updates properly
-      function selectUser(user) {
-        if (!usersList || !messagesContainer || !currentUser) return;
-
-        const activeUserElements =
-          document.querySelectorAll(".user-item.active");
-        activeUserElements.forEach((el) => el.classList.remove("active"));
-
-        selectedUser = user;
-        const userElement = document.getElementById(`user-${user.id}`);
-        if (userElement) userElement.classList.add("active");
-
-        messagesContainer.innerHTML =
-          '<div class="loading-messages">Loading...</div>';
-
-        if (emptyChat) emptyChat.style.display = "none";
-        if (activeChat) activeChat.style.display = "flex";
-
-        const userDisplayName =
-          user.displayName || user.email.split("@")[0] || "User";
-        const userAvatarColor = user.avatarColor || "#128C7E";
-        const userInitial = userDisplayName.charAt(0).toUpperCase();
-
-        if (recipientName)
-          recipientName.textContent = `${userDisplayName} (${formatLastSeen(
-            user.lastSeen
-          )})`;
-        if (mobileRecipientName)
-          mobileRecipientName.textContent = `${userDisplayName} (${formatLastSeen(
-            user.lastSeen
-          )})`;
-        if (recipientAvatar) {
-          recipientAvatar.textContent = userInitial;
-          recipientAvatar.style.backgroundColor = userAvatarColor;
-        }
-        if (mobileRecipientAvatar) {
-          mobileRecipientAvatar.textContent = userInitial;
-          mobileRecipientAvatar.style.backgroundColor = userAvatarColor;
-        }
-
-        setupChatFunctionality();
-
-        if (messagesUnsubscribe) messagesUnsubscribe();
-
-        const chatId = [currentUser.uid, user.id].sort().join("_");
-        const MESSAGES_PER_PAGE = 50;
-
-        db.collection("users")
-          .doc(currentUser.uid)
-          .update({
-            lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
-          })
-          .catch((error) => console.error("Error updating lastSeen:", error));
-
-        Promise.all([
-          db.collection("deletedMessages").where("chatId", "==", chatId).get(),
-          db
-            .collection("chats")
-            .doc(chatId)
-            .collection("messages")
-            .orderBy("timestamp", "asc")
-            .limit(MESSAGES_PER_PAGE)
-            .get(),
-        ])
-          .then(([deletedSnapshot, messagesSnapshot]) => {
-            const deletedMessageIds = new Set(
-              deletedSnapshot.docs.map((doc) => doc.data().messageId)
-            );
-            messagesContainer.innerHTML = "";
-
-            messagesSnapshot.docs
-              .filter((doc) => !deletedMessageIds.has(doc.id))
-              .forEach((doc) => displayMessage({ id: doc.id, ...doc.data() }));
-
-            scrollToBottom();
-
-            messagesUnsubscribe = db
-              .collection("chats")
-              .doc(chatId)
-              .collection("messages")
-              .orderBy("timestamp", "asc")
-              .onSnapshot(
-                (snapshot) => {
-                  snapshot.docChanges().forEach((change) => {
-                    const message = { id: change.doc.id, ...change.doc.data() };
-                    if (deletedMessageIds.has(message.id)) return;
-
-                    if (change.type === "added") {
-                      displayMessage(message, true);
-                    } else if (change.type === "modified") {
-                      const existingMessage = document.querySelector(
-                        `.message[data-id="${message.id}"]`
-                      );
-                      if (existingMessage) {
-                        if (message.isDeleted) {
-                          existingMessage.innerHTML =
-                            '<i class="deleted-message-text">This message was deleted</i>';
-                          existingMessage.classList.add("deleted-for-me");
-                        } else if (message.senderId === currentUser.uid) {
-                          // Update status tick marks in real-time
-                          const header =
-                            existingMessage.querySelector(".message-header");
-                          let statusHTML = "";
-                          switch (message.status) {
-                            case "sent":
-                              statusHTML =
-                                '<span class="message-status sent">✓</span>';
-                              break;
-                            case "delivered":
-                              statusHTML =
-                                '<span class="message-status delivered">✓✓</span>';
-                              break;
-                            case "read":
-                              statusHTML =
-                                '<span class="message-status read">✓✓</span>';
-                              break;
-                          }
-                          header.innerHTML = `
-                                    <span class="message-time">${
-                                      existingMessage.querySelector(
-                                        ".message-time"
-                                      ).textContent
-                                    }</span>
-                                    ${statusHTML}
-                                `;
-                        }
-                      }
-                    } else if (change.type === "removed") {
-                      const messageElement = document.querySelector(
-                        `.message[data-id="${message.id}"]`
-                      );
-                      if (messageElement) messageElement.remove();
-                    }
-                  });
-                  updateAllUnreadCounts();
-                },
-                (error) => {
-                  console.error("Error getting messages:", error);
-                  showToast(error.message, "error");
-                  messagesContainer.innerHTML =
-                    '<div class="message-error">Failed to load messages.</div>';
-                }
-              );
-          })
-          .catch((error) => {
-            console.error("Error loading messages:", error);
-            showToast(error.message, "error");
-            messagesContainer.innerHTML =
-              '<div class="message-error">Failed to load messages.</div>';
-          });
-      }
-
-      // ... (Keep all other code the same from here onward)
 
       function selectUser(user) {
         if (!usersList || !messagesContainer || !currentUser) return;
@@ -3853,10 +3709,10 @@
         unreadCount.style.display = "none";
 
         userItem.innerHTML = `
-        <div class="user-status"></div>
-        <span class="user-name">${user.displayName}</span>
-        <span class="last-seen">${formatLastSeen(user.lastSeen)}</span>
-    `;
+          <div class="user-status"></div>
+          <span class="user-name">${user.displayName}</span>
+          <span class="last-seen">${formatLastSeen(user.lastSeen)}</span>
+        `;
         userItem.prepend(avatar);
         userItem.appendChild(unreadCount);
 
@@ -3981,24 +3837,33 @@
             const profileDoc = await db.collection("users").doc(user.uid).get();
             if (profileDoc.exists) {
               userProfile = profileDoc.data();
-              if (userName) userName.textContent = userProfile.displayName;
-              if (userPic) {
-                userPic.innerHTML = "";
-                userPic.appendChild(
-                  generateAvatar(
-                    userProfile.displayName,
-                    userProfile.avatarColor
-                  )
-                );
-              }
-              if (chatSection) chatSection.style.display = "flex";
-              setupMobileView();
-              loadUsers();
-              setupChatFunctionality();
+              if (!userProfile.phoneVerified) {
+                if (!userProfile.otpCode)
+                  await sendOTP(user.uid, userProfile.phone);
+                if (otpVerificationSection)
+                  otpVerificationSection.style.display = "flex";
+              } else if (!userProfile.displayName) {
+                if (profileSection) profileSection.style.display = "flex";
+              } else {
+                if (userName) userName.textContent = userProfile.displayName;
+                if (userPic) {
+                  userPic.innerHTML = "";
+                  userPic.appendChild(
+                    generateAvatar(
+                      userProfile.displayName,
+                      userProfile.avatarColor
+                    )
+                  );
+                }
+                if (chatSection) chatSection.style.display = "flex";
+                setupMobileView();
+                loadUsers();
+                setupChatFunctionality();
 
-              await db.collection("users").doc(user.uid).update({
-                lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
-              });
+                await db.collection("users").doc(user.uid).update({
+                  lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+                });
+              }
             } else {
               if (profileSection) profileSection.style.display = "flex";
             }
@@ -4017,6 +3882,8 @@
           if (chatSection) chatSection.style.display = "none";
           if (profileSection) profileSection.style.display = "none";
           if (verificationSection) verificationSection.style.display = "none";
+          if (otpVerificationSection)
+            otpVerificationSection.style.display = "none";
           if (resetPasswordSection) resetPasswordSection.style.display = "none";
           if (signupSection) signupSection.style.display = "none";
           if (loginSection) loginSection.style.display = "flex";
@@ -4030,66 +3897,66 @@
 
         const mobileStyles = document.createElement("style");
         mobileStyles.textContent = `
-        @media (max-width: 768px) {
-            .chat-content {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background-color: #fff;
-                z-index: 100;
-                transform: translateX(100%);
-                transition: transform 0.3s ease;
-            }
-            .chat-content.active {
-                transform: translateX(0);
-            }
-            .input-container {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-            }
-            .messages-container {
-                padding-bottom: 60px;
-            }
-        }
-    `;
+          @media (max-width: 768px) {
+              .chat-content {
+                  position: fixed;
+                  top: 0;
+                  left: 0;
+                  right: 0;
+                  bottom: 0;
+                  background-color: #fff;
+                  z-index: 100;
+                  transform: translateX(100%);
+                  transition: transform 0.3s ease;
+              }
+              .chat-content.active {
+                  transform: translateX(0);
+              }
+              .input-container {
+                  position: fixed;
+                  bottom: 0;
+                  left: 0;
+                  right: 0;
+              }
+              .messages-container {
+                  padding-bottom: 60px;
+              }
+          }
+        `;
         document.head.appendChild(mobileStyles);
 
         const statusStyles = document.createElement("style");
         statusStyles.textContent = `
-        .message-status {
-            display: inline-block;
-            margin-left: 5px;
-            font-size: 12px;
-        }
-        .message-status.sent { color: #888; }
-        .message-status.delivered { color: #888; }
-        .message-status.read { color: #0084FF; }
-        .message-content { position: relative; display: flex; align-items: flex-start; }
-        .message-text { word-wrap: break-word; flex: 1; margin-right: 24px; }
-        .message-actions { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); opacity: 0; transition: opacity 0.2s ease; }
-        .my-message:hover .message-actions { opacity: 1; }
-        .delete-message-btn { background: none; border: none; cursor: pointer; color: rgba(136, 136, 136, 0.7); padding: 4px; border-radius: 50%; }
-        .delete-message-btn:hover { color: #ff5252; background-color: rgba(0, 0, 0, 0.1); }
-        .delete-dialog { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-        .delete-options { background-color: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); display: flex; flex-direction: column; min-width: 250px; }
-        .delete-options button { padding: 12px 15px; margin: 5px 0; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 500; }
-        .delete-for-me-btn { background-color: #f1f1f1; color: #333; }
-        .delete-for-me-btn:hover { background-color: #e0e0e0; }
-        .delete-for-everyone-btn { background-color: #ff5252; color: white; }
-        .delete-for-everyone-btn:hover { background-color: #ff3333; }
-        .cancel-delete-btn { background-color: #e0e0e0; color: #333; }
-        .cancel-delete-btn:hover { background-color: #d0d0d0; }
-        .deleted-message-text { font-style: italic; color: #888; }
-        .deleted-for-me { opacity: 0.6; }
-        .loading-messages { text-align: center; padding: 20px; color: #888; }
-        .message-error { text-align: center; padding: 20px; color: #ff5252; }
-        .unread-count { display: inline-block; width: 20px; height: 20px; background-color: #25D366; color: white; border-radius: 50%; text-align: center; line-height: 20px; font-size: 12px; margin-left: 10px; }
-        .last-seen { display: block; font-size: 12px; color: #888; }
-    `;
+          .message-status {
+              display: inline-block;
+              margin-left: 5px;
+              font-size: 12px;
+          }
+          .message-status.sent { color: #888; }
+          .message-status.delivered { color: #888; }
+          .message-status.read { color: #0084FF; }
+          .message-content { position: relative; display: flex; align-items: flex-start; }
+          .message-text { word-wrap: break-word; flex: 1; margin-right: 24px; }
+          .message-actions { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); opacity: 0; transition: opacity 0.2s ease; }
+          .my-message:hover .message-actions { opacity: 1; }
+          .delete-message-btn { background: none; border: none; cursor: pointer; color: rgba(136, 136, 136, 0.7); padding: 4px; border-radius: 50%; }
+          .delete-message-btn:hover { color: #ff5252; background-color: rgba(0, 0, 0, 0.1); }
+          .delete-dialog { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+          .delete-options { background-color: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); display: flex; flex-direction: column; min-width: 250px; }
+          .delete-options button { padding: 12px 15px; margin: 5px 0; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 500; }
+          .delete-for-me-btn { background-color: #f1f1f1; color: #333; }
+          .delete-for-me-btn:hover { background-color: #e0e0e0; }
+          .delete-for-everyone-btn { background-color: #ff5252; color: white; }
+          .delete-for-everyone-btn:hover { background-color: #ff3333; }
+          .cancel-delete-btn { background-color: #e0e0e0; color: #333; }
+          .cancel-delete-btn:hover { background-color: #d0d0d0; }
+          .deleted-message-text { font-style: italic; color: #888; }
+          .deleted-for-me { opacity: 0.6; }
+          .loading-messages { text-align: center; padding: 20px; color: #888; }
+          .message-error { text-align: center; padding: 20px; color: #ff5252; }
+          .unread-count { display: inline-block; width: 20px; height: 20px; background-color: #25D366; color: white; border-radius: 50%; text-align: center; line-height: 20px; font-size: 12px; margin-left: 10px; }
+          .last-seen { display: block; font-size: 12px; color: #888; }
+        `;
         document.head.appendChild(statusStyles);
 
         window.showDeleteOptions = showDeleteOptions;
@@ -4097,31 +3964,6 @@
         window.deleteMessage = deleteMessage;
         window.generateAvatar = generateAvatar;
         window.scrollToBottom = scrollToBottom;
-      });
-
-      document.addEventListener("DOMContentLoaded", function () {
-        const supportEmail = document.querySelector(".support-email");
-        if (supportEmail) {
-          supportEmail.addEventListener("click", function () {
-            const emailLink = this.querySelector(".hidden-email");
-            const rect = this.getBoundingClientRect();
-            const isVisible =
-              window.getComputedStyle(emailLink).visibility === "visible";
-
-            if (!isVisible) {
-              emailLink.style.visibility = "visible";
-              emailLink.style.opacity = "1";
-              emailLink.style.top = "-30px";
-
-              // Hide after 3 seconds
-              setTimeout(() => {
-                emailLink.style.visibility = "hidden";
-                emailLink.style.opacity = "0";
-                emailLink.style.top = "0";
-              }, 3000);
-            }
-          });
-        }
       });
     </script>
   </body>
