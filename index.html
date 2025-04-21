@@ -1,163 +1,3971 @@
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Site Under Maintenance</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Messageium - Best Web Chat App</title>
+    <link rel="shortcut icon" href="chat.png" type="image/png" />
+
+    <!-- SEO Meta Tags -->
+    <meta
+      name="description"
+      content="Messageium is the best web chat app for seamless communication. Enjoy fast, secure, and feature-rich messaging anywhere."
+    />
+    <meta
+      name="keywords"
+      content="web chat app, messaging, secure chat, real-time communication, chat application"
+    />
+    <meta name="author" content="Your Company or Your Name" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://www.messageium.com/" />
+
+    <!-- Open Graph / Facebook Meta Tags -->
+    <meta property="og:title" content="Messageium - Best Web Chat App" />
+    <meta
+      property="og:description"
+      content="Experience the best in online communication with Messageium."
+    />
+    <meta
+      property="og:image"
+      content="https://www.yourwebsite.com/images/og-image.jpg"
+    />
+    <meta property="og:url" content="https://www.messageium.com/" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Messageium - Best Web Chat App" />
+    <meta
+      name="twitter:description"
+      content="Discover a secure and feature-packed web chat experience with Messageium."
+    />
+    <meta
+      name="twitter:image"
+      content="https://www.yourwebsite.com/images/twitter-image.jpg"
+    />
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+      :root {
+        --primary-color: #128c7e;
+        --bg-color: #ffffff;
+        --secondary-bg: #ededed;
+        --text-color: #3b4a54;
+        --secondary-text: #667781;
+        --message-bg: #e2f7cb;
+        --other-message-bg: #ffffff;
+        --input-bg: #f0f2f5;
+        --sender-bg: rgba(18, 140, 126, 0.15);
+        --error-color: #f15c6d;
+        --success-color: #25d366;
+        --warning-color: #ffc300;
+        --chat-bg: #e5ddd5;
+        --chat-bg-pattern: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636 32.636 2.05 38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%239C92AC' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+        --border-radius-sm: 8px;
+        --border-radius-lg: 12px;
+        --border-radius-xl: 18px;
+        --transition-speed: 0.2s;
+        --box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        --elevation: 0 4px 16px rgba(0, 0, 0, 0.15);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", "Helvetica Neue", Helvetica, "Lucida Grande",
+          Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        transition: all var(--transition-speed) ease;
+      }
+
+      body {
+        background-color: #128c7e;
+        color: var(--text-color);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .app-container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        width: 100vw;
+        background-color: var(--bg-color);
+        overflow: hidden;
+      }
+
+      header {
+        background-color: #128c7e;
+        padding: 12px 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: var(--box-shadow);
+        color: white;
+        z-index: 10;
+      }
+
+      .logo {
+        font-size: 20px;
+        font-weight: 500;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .logo::before {
+        content: "";
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564c.173.087.289.131.332.202.043.72.043.433-.101.593zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 1.856.001 3.598.723 4.907 2.034 1.31 1.311 2.031 3.054 2.03 4.908-.001 3.825-3.113 6.938-6.937 6.938z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .profile-pic {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        background-color: #075e54;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-weight: 500;
+        font-size: 16px;
+        overflow: hidden;
+      }
+
+      .username {
+        font-weight: 500;
+        color: white;
+      }
+
+      .logout-btn {
+        background-color: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: white;
+        padding: 6px 12px;
+        border-radius: var(--border-radius-sm);
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      .logout-btn:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+      }
+
+      .auth-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        padding: 20px;
+        background-image: url("background.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-color: var(--bg-color);
+        overflow-y: auto;
+      }
+
+      .auth-card {
+        background-color: white;
+        padding: 30px;
+        border-radius: var(--border-radius-lg);
+        text-align: center;
+        box-shadow: var(--elevation);
+        width: 90%;
+        max-width: 400px;
+      }
+
+      .auth-title {
+        font-size: 24px;
+        margin-bottom: 24px;
+        color: var(--primary-color);
+      }
+
+      .auth-form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+
+      .form-label {
+        font-size: 14px;
+        color: var(--secondary-text);
+        font-weight: 500;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #e2e8f0;
+        border-radius: var(--border-radius-sm);
+        background-color: white;
+        color: var(--text-color);
+        font-size: 15px;
+      }
+
+      .form-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+      }
+
+      .auth-btn {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: var(--border-radius-sm);
+        cursor: pointer;
+        font-weight: 500;
+        margin-top: 10px;
+        text-transform: uppercase;
+        font-size: 14px;
+        letter-spacing: 0.5px;
+      }
+
+      .auth-btn:hover {
+        background-color: #0e796e;
+      }
+
+      .auth-btn:disabled {
+        background-color: #78c7c0;
+        cursor: not-allowed;
+      }
+
+      .auth-switch {
+        margin-top: 20px;
+        font-size: 14px;
+        color: var(--secondary-text);
+      }
+
+      .auth-switch a {
+        color: var(--primary-color);
+        text-decoration: none;
+        cursor: pointer;
+        font-weight: 500;
+      }
+
+      .auth-switch a:hover {
+        text-decoration: underline;
+      }
+
+      .auth-error {
+        color: var(--error-color);
+        font-size: 14px;
+        margin-top: 10px;
+        text-align: left;
+        background-color: rgba(241, 92, 109, 0.1);
+        padding: 8px 12px;
+        border-radius: var(--border-radius-sm);
+      }
+
+      .auth-success {
+        color: var(--success-color);
+        font-size: 14px;
+        margin-top: 10px;
+        background-color: rgba(37, 211, 102, 0.1);
+        padding: 8px 12px;
+        border-radius: var(--border-radius-sm);
+      }
+
+      .profile-setup {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+      }
+
+      .profile-pic-setup {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .profile-pic-preview {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background-color: var(--primary-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 32px;
+        color: white;
+        overflow: hidden;
+        cursor: pointer;
+        position: relative;
+      }
+
+      .profile-pic-preview::after {
+        content: "Edit";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        font-size: 12px;
+        padding: 4px 0;
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+
+      .profile-pic-preview:hover::after {
+        opacity: 1;
+      }
+
+      .chat-container {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+        background-color: var(--bg-color);
+        position: relative;
+      }
+
+      .users-sidebar {
+        width: 280px;
+        background-color: white;
+        border-right: 1px solid #e2e8f0;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .sidebar-header {
+        padding: 16px;
+        font-weight: 500;
+        background-color: var(--secondary-bg);
+        color: var(--secondary-text);
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        z-index: 2;
+      }
+
+      .users-list {
+        flex: 1;
+        overflow-y: auto;
+        background-color: white;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+      }
+
+      .users-list::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .users-list::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .users-list::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+      }
+
+      .user-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        border-bottom: 1px solid #f0f2f5;
+        cursor: pointer;
+      }
+
+      .user-item:hover {
+        background-color: #f5f6f7;
+      }
+
+      .user-item.active {
+        background-color: #ebebeb;
+      }
+
+      .user-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        font-size: 18px;
+        color: white;
+        background-color: #075e54;
+        text-transform: uppercase;
+        flex-shrink: 0;
+      }
+
+      .user-name {
+        font-size: 16px;
+        font-weight: 500;
+        flex: 1;
+        color: var(--text-color);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .user-status {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: var(--success-color);
+        flex-shrink: 0;
+      }
+
+      .chat-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        height: 100%;
+        background-color: var(--chat-bg);
+        background-image: var(--chat-bg-pattern);
+        overflow: hidden;
+      }
+
+      .chat-header {
+        padding: 10px 16px;
+        background-color: var(--secondary-bg);
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        z-index: 2;
+      }
+
+      .chat-recipient {
+        font-weight: 500;
+        font-size: 16px;
+        color: black;
+      }
+
+      .empty-chat {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: var(--secondary-text);
+        text-align: center;
+        padding: 20px;
+        background-color: var(--chat-bg);
+        background-image: var(--chat-bg-pattern);
+        overflow: hidden;
+      }
+
+      .empty-chat-icon {
+        font-size: 64px;
+        margin-bottom: 20px;
+        color: var(--primary-color);
+        opacity: 0.8;
+      }
+
+      .messages-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+        height: calc(100% - 110px);
+        position: relative;
+      }
+
+      .messages-container::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .messages-container::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .messages-container::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+      }
+
+      .message {
+        padding: 8px 12px;
+        border-radius: var(--border-radius-lg);
+        max-width: 75%;
+        word-break: break-word;
+        position: relative;
+        animation: fadeIn var(--transition-speed);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
         }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            background-color: #f8f9fa;
-            color: #343a40;
-            line-height: 1.6;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
-        
-        .maintenance-container {
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 40px;
-            max-width: 700px;
-            width: 100%;
-            text-align: center;
+      }
+
+      .other-message {
+        background-color: var(--other-message-bg);
+        align-self: flex-start;
+        border-top-left-radius: var(--border-radius-sm);
+        border-bottom-left-radius: 0;
+      }
+
+      .other-message::after {
+        content: "";
+        position: absolute;
+        left: -8px;
+        bottom: 0;
+        width: 16px;
+        height: 16px;
+        background-color: var(--other-message-bg);
+        clip-path: polygon(100% 0, 0 100%, 100% 100%);
+      }
+
+      .my-message {
+        background-color: var(--message-bg);
+        align-self: flex-end;
+        border-top-right-radius: var(--border-radius-sm);
+        border-bottom-right-radius: 0;
+      }
+
+      .my-message::after {
+        content: "";
+        position: absolute;
+        right: -8px;
+        bottom: 0;
+        width: 16px;
+        height: 16px;
+        background-color: var(--message-bg);
+        clip-path: polygon(0 0, 0 100%, 100% 100%);
+      }
+
+      .message-header {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 4px;
+      }
+
+      .message-sender {
+        font-weight: 500;
+        font-size: 13px;
+        color: var(--primary-color);
+      }
+
+      .message-time {
+        font-size: 11px;
+        color: var(--secondary-text);
+        margin-left: auto;
+      }
+
+      .message-pic {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: #075e54;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-size: 10px;
+        text-transform: uppercase;
+      }
+
+      .message-content {
+        font-size: 14px;
+        line-height: 1.4;
+      }
+
+      .input-container {
+        position: sticky;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        background-color: #f0f2f5;
+        z-index: 5;
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+      }
+
+      .message-input {
+        flex: 1;
+        padding: 12px 16px;
+        border: none;
+        border-radius: 20px;
+        background-color: white;
+        color: var(--text-color);
+        font-size: 15px;
+        max-height: 100px;
+        overflow-y: auto;
+        resize: none;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+
+      .message-input:focus {
+        outline: none;
+      }
+
+      .send-btn {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        flex-shrink: 0;
+      }
+
+      .send-btn::after {
+        content: "";
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M2.01 21L23 12 2.01 3 2 10l15 2-15 2z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+
+      .send-btn:hover {
+        background-color: #0e796e;
+      }
+
+      .send-btn:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+      }
+
+      .loader-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      .loader {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid var(--primary-color);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
         }
-        
-        .icon {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 20px;
+        100% {
+          transform: rotate(360deg);
         }
-        
-        h1 {
-            font-size: 28px;
-            margin-bottom: 15px;
-            color: #212529;
+      }
+
+      .toast {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 12px 20px;
+        border-radius: var(--border-radius-sm);
+        color: white;
+        font-weight: 500;
+        box-shadow: var(--elevation);
+        z-index: 1000;
+        animation: fadeIn 0.3s, fadeOut 0.5s 2.5s forwards;
+        min-width: 250px;
+        max-width: 80%;
+        text-align: center;
+      }
+
+      .toast.success {
+        background-color: var(--success-color);
+      }
+
+      .toast.error {
+        background-color: var(--error-color);
+      }
+
+      .toast.warning {
+        background-color: var(--warning-color);
+      }
+
+      @keyframes fadeOut {
+        from {
+          opacity: 1;
         }
-        
-        p {
-            font-size: 16px;
-            margin-bottom: 20px;
-            color: #6c757d;
+        to {
+          opacity: 0;
+          visibility: hidden;
         }
-        
-        .status-bar {
-            background-color: #e9ecef;
-            border-radius: 20px;
-            height: 10px;
-            margin: 30px auto;
-            overflow: hidden;
-            position: relative;
-            width: 80%;
+      }
+
+      .unread-count {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        background-color: #25d366;
+        color: white;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 20px;
+        font-size: 12px;
+        font-weight: 500;
+        margin-left: 10px;
+        visibility: hidden;
+      }
+
+      .unread-message-count {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        background-color: #25d366;
+        color: white;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 20px;
+        font-size: 12px;
+        font-weight: 500;
+        margin-left: 5px;
+      }
+
+      .unread-count.active,
+      .unread-message-count.active {
+        visibility: visible;
+      }
+
+      .unread-count:hover,
+      .unread-message-count:hover {
+        background-color: #1ebe57;
+        transition: background-color 0.2s ease;
+      }
+
+      .message-header .unread-message-count {
+        vertical-align: middle;
+      }
+
+      .user-item {
+        position: relative;
+        display: flex;
+        align-items: center;
+        padding: 10px;
+      }
+
+      .message-header {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      @media (max-width: 768px) {
+        .users-sidebar {
+          width: 100%;
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: 10;
+          transition: transform 0.3s ease;
         }
-        
-        .status-progress {
-            animation: progress 2s ease-in-out infinite;
-            background: linear-gradient(90deg, #4dabf7, #228be6);
-            border-radius: 20px;
-            height: 100%;
-            width: 30%;
+
+        .chat-content {
+          width: 100%;
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: 15;
+          transform: translateX(100%);
+          transition: transform 0.3s ease;
+          display: flex;
+          flex-direction: column;
+          height: 100%;
         }
-        
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 30px;
+
+        .chat-content.active {
+          transform: translateX(0);
         }
-        
-        .social-links a {
-            color: #495057;
-            text-decoration: none;
-            transition: color 0.3s;
+
+        .mobile-chat-header {
+          background-color: var(--primary-color);
+          color: white;
+          padding: 10px 16px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          z-index: 20;
         }
-        
-        .social-links a:hover {
-            color: #228be6;
+
+        .back-button {
+          background: none;
+          border: none;
+          color: white;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 5px;
         }
-        
-        .estimated-time {
-            background-color: #e7f5ff;
-            border-radius: 50px;
-            display: inline-block;
-            font-weight: 500;
-            margin-top: 20px;
-            padding: 5px 15px;
+
+        .back-button::before {
+          content: "";
+          display: block;
+          width: 24px;
+          height: 24px;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z'/%3E%3C/svg%3E");
+          background-repeat: no-repeat;
+          background-position: center;
         }
-        
-        @keyframes progress {
-            0% {
-                transform: translateX(-100%);
-            }
-            100% {
-                transform: translateX(400%);
-            }
+
+        .input-container {
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          padding: 10px 16px;
+          background-color: var(--input-bg);
+          z-index: 25;
         }
-        
-        @media (max-width: 576px) {
-            .maintenance-container {
-                padding: 30px 20px;
-            }
-            
-            h1 {
-                font-size: 24px;
-            }
-            
-            .icon {
-                width: 80px;
-                height: 80px;
-            }
+
+        .messages-container {
+          height: calc(100% - 115px);
+          padding-bottom: 60px;
         }
+
+        #chat-header {
+          display: none !important;
+        }
+
+        .mobile-chat-header {
+          display: flex !important;
+        }
+
+        #active-chat {
+          height: 100vh !important;
+          width: 100% !important;
+        }
+      }
+
+      @media (max-width: 480px) {
+        header {
+          padding: 10px 12px;
+        }
+
+        .logo {
+          font-size: 18px;
+        }
+
+        .profile-pic {
+          width: 36px;
+          height: 36px;
+        }
+
+        .message {
+          max-width: 85%;
+          padding: 8px 10px;
+          font-size: 14px;
+        }
+
+        .message-sender {
+          font-size: 12px;
+        }
+
+        .message-time {
+          font-size: 10px;
+        }
+
+        .input-container {
+          padding: 8px 10px;
+        }
+
+        .message-input {
+          padding: 9px 12px;
+          font-size: 14px;
+        }
+
+        .send-btn {
+          width: 36px;
+          height: 36px;
+        }
+
+        body.keyboard-open .input-container {
+          position: fixed;
+          bottom: 0;
+        }
+
+        .username {
+          display: none;
+        }
+      }
+
+      .footer {
+        background-color: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(5px);
+        padding: 12px 16px;
+        text-align: center;
+        font-size: 13px;
+        color: var(--secondary-text);
+        border-top: 1px solid #e2e8f0;
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        bottom: 0;
+        display: block;
+      }
+
+      .auth-container .footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+
+      .footer-content {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .copyright {
+        margin: 0;
+      }
+
+      .support-email {
+        position: relative;
+        cursor: pointer;
+      }
+
+      .email-preview {
+        color: var(--primary-color);
+        font-weight: 500;
+      }
+
+      .hidden-email {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: var(--primary-color);
+        color: white;
+        padding: 4px 8px;
+        border-radius: var(--border-radius-sm);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+        text-decoration: none;
+        font-size: 12px;
+      }
+
+      .support-email:hover .hidden-email {
+        opacity: 1;
+        visibility: visible;
+        top: -30px;
+      }
+
+      .hidden-email:hover {
+        background-color: #0e796e;
+      }
+
+      @media (max-width: 768px) {
+        .footer {
+          padding: 10px;
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background-color: rgba(255, 255, 255, 0.8);
+        }
+      }
     </style>
-</head>
-<body>
-    <div class="maintenance-container">
-        <div class="icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#228be6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
-            </svg>
+  </head>
+  <body>
+    <!-- Login Section -->
+    <div id="login-section" class="auth-container">
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+          />
+          <title>Messageium Support</title>
+          <style>
+            * {
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
+              font-family: "Inter", -apple-system, BlinkMacSystemFont,
+                "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            }
+
+            :root {
+              --primary: #6366f1;
+              --primary-hover: #4f46e5;
+              --primary-light: #eef2ff;
+              --white: #ffffff;
+              --text-main: #1f2937;
+              --text-secondary: #6b7280;
+              --border: #e2e8f0;
+              --border-hover: #cbd5e1;
+              --success: #10b981;
+              --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+              --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06);
+              --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            }
+
+            /* Chat Bubble Container */
+            .messageium-container {
+              position: fixed;
+              bottom: 20px;
+              right: 20px;
+              z-index: 99999;
+              font-size: 14px;
+            }
+
+            /* Chat Bubble */
+            .messageium-bubble {
+              width: 50px;
+              height: 50px;
+              background-color: var(--primary);
+              border-radius: 50%;
+              box-shadow: var(--shadow-lg);
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              cursor: pointer;
+              transition: transform 0.3s ease, background-color 0.3s ease;
+              position: relative;
+            }
+
+            .messageium-bubble:hover {
+              transform: translateY(-5px);
+              background-color: var(--primary-hover);
+            }
+
+            .messageium-bubble svg {
+              width: 20px;
+              height: 20px;
+              fill: var(--white);
+            }
+
+            .messageium-badge {
+              position: absolute;
+              top: -5px;
+              right: -5px;
+              background-color: #ef4444;
+              color: var(--white);
+              border-radius: 50%;
+              width: 18px;
+              height: 18px;
+              font-size: 10px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              font-weight: 600;
+              border: 2px solid var(--white);
+            }
+
+            /* Chat Window */
+            .messageium-window {
+              position: absolute;
+              bottom: 65px;
+              right: 0;
+              width: 300px;
+              height: 450px;
+              background-color: var(--white);
+              border-radius: 12px;
+              box-shadow: var(--shadow-lg);
+              display: none;
+              flex-direction: column;
+              overflow: hidden;
+              border: 1px solid var(--border);
+              transition: all 0.3s ease;
+            }
+
+            .messageium-window.active {
+              display: flex;
+              animation: slideUp 0.3s forwards;
+            }
+
+            @keyframes slideUp {
+              from {
+                opacity: 0;
+                transform: translateY(20px);
+              }
+              to {
+                opacity: 1;
+                transform: translateY(0);
+              }
+            }
+
+            .messageium-header {
+              background-color: var(--primary);
+              color: var(--white);
+              padding: 12px 15px;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .messageium-header-content {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+            }
+
+            .messageium-logo {
+              width: 24px;
+              height: 24px;
+              background-color: var(--white);
+              border-radius: 6px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+
+            .messageium-logo svg {
+              width: 14px;
+              height: 14px;
+              fill: var(--primary);
+            }
+
+            .messageium-header h3 {
+              font-size: 15px;
+              font-weight: 600;
+            }
+
+            .messageium-status {
+              font-size: 11px;
+              opacity: 0.9;
+              display: flex;
+              align-items: center;
+              gap: 4px;
+            }
+
+            .messageium-status-dot {
+              width: 6px;
+              height: 6px;
+              background-color: #10b981;
+              border-radius: 50%;
+            }
+
+            .messageium-header .close-btn {
+              cursor: pointer;
+              opacity: 0.8;
+              width: 20px;
+              height: 20px;
+              border-radius: 50%;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              transition: all 0.2s ease;
+              background-color: rgba(255, 255, 255, 0.1);
+            }
+
+            .messageium-header .close-btn:hover {
+              opacity: 1;
+              background-color: rgba(255, 255, 255, 0.2);
+            }
+
+            .messageium-body {
+              flex: 1;
+              padding: 0;
+              overflow-y: auto;
+              display: flex;
+              flex-direction: column;
+              position: relative;
+              background-color: #f9fafb;
+            }
+
+            /* Welcome Screen */
+            .messageium-welcome {
+              padding: 20px 15px;
+              text-align: center;
+            }
+
+            .messageium-welcome-image {
+              margin: 10px auto 15px;
+              width: 70px;
+              height: 70px;
+              border-radius: 50%;
+              background-color: var(--primary-light);
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+
+            .messageium-welcome-image svg {
+              width: 35px;
+              height: 35px;
+              fill: var(--primary);
+            }
+
+            .messageium-welcome h2 {
+              color: var(--text-main);
+              font-size: 16px;
+              margin-bottom: 6px;
+              font-weight: 600;
+            }
+
+            .messageium-welcome p {
+              color: var(--text-secondary);
+              margin-bottom: 15px;
+              font-size: 13px;
+              line-height: 1.4;
+            }
+
+            .messageium-button-container {
+              display: flex;
+              flex-direction: column;
+              gap: 10px;
+              margin-top: 12px;
+            }
+
+            .messageium-button {
+              padding: 10px 15px;
+              background-color: var(--white);
+              color: var(--text-main);
+              border: 1px solid var(--border);
+              border-radius: 8px;
+              cursor: pointer;
+              font-size: 13px;
+              font-weight: 500;
+              transition: all 0.2s ease;
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              box-shadow: var(--shadow-sm);
+              text-align: left;
+            }
+
+            .messageium-button:hover {
+              border-color: var(--border-hover);
+              box-shadow: var(--shadow-md);
+              transform: translateY(-2px);
+            }
+
+            .messageium-button.primary {
+              background-color: var(--primary);
+              color: var(--white);
+              border: none;
+            }
+
+            .messageium-button.primary:hover {
+              background-color: var(--primary-hover);
+            }
+
+            .messageium-button svg {
+              width: 16px;
+              height: 16px;
+              flex-shrink: 0;
+            }
+
+            .messageium-button-text {
+              display: flex;
+              flex-direction: column;
+            }
+
+            .messageium-button-label {
+              font-weight: 600;
+            }
+
+            .messageium-button-description {
+              font-size: 11px;
+              color: var(--text-secondary);
+            }
+
+            .messageium-button.primary .messageium-button-description {
+              color: rgba(255, 255, 255, 0.8);
+            }
+
+            /* Forms */
+            .messageium-form {
+              display: none;
+              flex-direction: column;
+              gap: 15px;
+              padding: 15px;
+              height: 100%;
+            }
+
+            .messageium-form-header {
+              display: flex;
+              align-items: center;
+              margin-bottom: 5px;
+            }
+
+            .messageium-back-btn {
+              width: 24px;
+              height: 24px;
+              border-radius: 50%;
+              background-color: var(--white);
+              border: 1px solid var(--border);
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              cursor: pointer;
+              margin-right: 8px;
+              flex-shrink: 0;
+            }
+
+            .messageium-back-btn:hover {
+              background-color: #f9fafb;
+              border-color: var(--border-hover);
+            }
+
+            .messageium-form-title {
+              font-size: 15px;
+              font-weight: 600;
+              color: var(--text-main);
+            }
+
+            .messageium-form-group {
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+            }
+
+            .messageium-form-group label {
+              font-size: 12px;
+              color: var(--text-secondary);
+              font-weight: 500;
+            }
+
+            .messageium-form-control {
+              padding: 10px 12px;
+              border: 1px solid var(--border);
+              border-radius: 6px;
+              font-size: 13px;
+              transition: all 0.2s ease;
+              background-color: var(--white);
+            }
+
+            .messageium-form-control:focus {
+              outline: none;
+              border-color: var(--primary);
+              box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+            }
+
+            .messageium-form textarea.messageium-form-control {
+              height: 120px;
+              resize: none;
+            }
+
+            .messageium-form-footer {
+              margin-top: auto;
+              display: flex;
+              flex-direction: column;
+              gap: 10px;
+            }
+
+            .messageium-submit-btn {
+              padding: 10px;
+              background-color: var(--primary);
+              color: var(--white);
+              border: none;
+              border-radius: 6px;
+              cursor: pointer;
+              font-size: 14px;
+              font-weight: 600;
+              transition: all 0.2s ease;
+            }
+
+            .messageium-submit-btn:hover {
+              background-color: var(--primary-hover);
+            }
+
+            .messageium-submit-btn:disabled {
+              opacity: 0.7;
+              cursor: not-allowed;
+            }
+
+            .messageium-back-link {
+              color: var(--text-secondary);
+              text-align: center;
+              cursor: pointer;
+              font-size: 12px;
+            }
+
+            .messageium-back-link:hover {
+              color: var(--primary);
+            }
+
+            /* Success Message */
+            .messageium-success {
+              display: none;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              text-align: center;
+              padding: 20px 15px;
+              height: 100%;
+              animation: fadeIn 0.5s ease;
+            }
+
+            @keyframes fadeIn {
+              from {
+                opacity: 0;
+              }
+              to {
+                opacity: 1;
+              }
+            }
+
+            .messageium-success-icon {
+              width: 60px;
+              height: 60px;
+              background-color: #ecfdf5;
+              border-radius: 50%;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              margin-bottom: 15px;
+            }
+
+            .messageium-success-icon svg {
+              width: 30px;
+              height: 30px;
+              fill: var(--success);
+            }
+
+            .messageium-success h3 {
+              color: var(--text-main);
+              font-size: 18px;
+              margin-bottom: 8px;
+              font-weight: 600;
+            }
+
+            .messageium-success p {
+              color: var(--text-secondary);
+              margin-bottom: 20px;
+              max-width: 220px;
+              line-height: 1.4;
+              font-size: 13px;
+            }
+
+            /* Loading state */
+            .messageium-loading {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background-color: rgba(255, 255, 255, 0.8);
+              display: none;
+              justify-content: center;
+              align-items: center;
+              z-index: 10;
+            }
+
+            .messageium-spinner {
+              width: 30px;
+              height: 30px;
+              border: 2px solid #f3f3f3;
+              border-top: 2px solid var(--primary);
+              border-radius: 50%;
+              animation: spin 1s linear infinite;
+            }
+
+            @keyframes spin {
+              0% {
+                transform: rotate(0deg);
+              }
+              100% {
+                transform: rotate(360deg);
+              }
+            }
+
+            /* Tooltip */
+            .messageium-tooltip {
+              position: absolute;
+              bottom: 60px;
+              right: 0;
+              background-color: var(--text-main);
+              color: var(--white);
+              padding: 6px 10px;
+              border-radius: 4px;
+              font-size: 12px;
+              opacity: 0;
+              visibility: hidden;
+              transition: opacity 0.3s ease, visibility 0.3s ease;
+              white-space: nowrap;
+            }
+
+            .messageium-tooltip::after {
+              content: "";
+              position: absolute;
+              bottom: -4px;
+              right: 20px;
+              width: 0;
+              height: 0;
+              border-left: 5px solid transparent;
+              border-right: 5px solid transparent;
+              border-top: 5px solid var(--text-main);
+            }
+
+            .messageium-bubble:hover .messageium-tooltip {
+              opacity: 1;
+              visibility: visible;
+            }
+
+            /* Form validation */
+            .messageium-form-control.error {
+              border-color: #ef4444;
+            }
+
+            .messageium-error-message {
+              color: #ef4444;
+              font-size: 11px;
+              margin-top: 3px;
+              display: none;
+            }
+
+            /* Responsive adjustments */
+            @media (max-width: 480px) {
+              .messageium-window {
+                width: calc(100vw - 30px);
+                max-width: 280px;
+                height: 420px;
+                right: -5px;
+              }
+
+              .messageium-container {
+                bottom: 15px;
+                right: 15px;
+              }
+
+              .messageium-bubble {
+                width: 45px;
+                height: 45px;
+              }
+
+              .messageium-welcome-image {
+                width: 60px;
+                height: 60px;
+              }
+
+              .messageium-welcome h2 {
+                font-size: 15px;
+              }
+            }
+
+            /* For larger screens, keep dimensions compact */
+            @media (min-width: 1025px) {
+              .messageium-window {
+                width: 320px;
+                height: 480px;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          <!-- Messageium Support Container -->
+          <div class="messageium-container">
+            <!-- Chat Bubble Button -->
+            <div class="messageium-bubble" id="messageiumBubble">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                  d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"
+                />
+                <path
+                  d="M7 9h10M7 12h7"
+                  stroke="white"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+              </svg>
+              <div class="messageium-badge" id="messageiumBadge">1</div>
+              <div class="messageium-tooltip">Need help?</div>
+            </div>
+
+            <!-- Chat Window -->
+            <div class="messageium-window" id="messageiumWindow">
+              <div class="messageium-header">
+                <div class="messageium-header-content">
+                  <div class="messageium-logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                      <path
+                        d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3>Messageium Support</h3>
+                    <div class="messageium-status">
+                      <div class="messageium-status-dot"></div>
+                      <span>Online now</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="close-btn" id="closeChat">✕</div>
+              </div>
+
+              <div class="messageium-body">
+                <!-- Loading spinner -->
+                <div class="messageium-loading" id="messageiumLoading">
+                  <div class="messageium-spinner"></div>
+                </div>
+
+                <!-- Welcome Screen -->
+                <div class="messageium-welcome" id="messageiumWelcome">
+                  <div class="messageium-welcome-image">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                      <path
+                        d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"
+                      />
+                      <path
+                        d="M7 7h10M7 10h7M7 13h4"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+                  </div>
+                  <h2>Welcome to Messageium</h2>
+                  <p>
+                    We're here to help. How would you like to get in touch with
+                    our support team?
+                  </p>
+
+                  <div class="messageium-button-container">
+                    <button
+                      class="messageium-button primary"
+                      id="customerSupportBtn"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <path
+                          d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                        ></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                        <path
+                          d="M16.5 14c-.53.21-1.12.35-1.5.35-2.5 0-4.5-2-4.5-4.5S12.5 5 15 5c1.25 0 2 .25 3 1"
+                        ></path>
+                      </svg>
+                      <div class="messageium-button-text">
+                        <span class="messageium-button-label"
+                          >Connect with Support</span
+                        >
+                        <span class="messageium-button-description"
+                          >Talk to our team directly</span
+                        >
+                      </div>
+                    </button>
+
+                    <button class="messageium-button" id="reportIssueBtn">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <path
+                          d="M12 8v4M12 16h.01M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"
+                        ></path>
+                      </svg>
+                      <div class="messageium-button-text">
+                        <span class="messageium-button-label"
+                          >Report an Issue</span
+                        >
+                        <span class="messageium-button-description"
+                          >Let us know about any problems</span
+                        >
+                      </div>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Report Issue Form -->
+                <form class="messageium-form" id="reportIssueForm">
+                  <div class="messageium-form-header">
+                    <div class="messageium-back-btn" id="issueBackBtn">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <path d="M19 12H5M12 19l-7-7 7-7"></path>
+                      </svg>
+                    </div>
+                    <div class="messageium-form-title">Report an Issue</div>
+                  </div>
+
+                  <div class="messageium-form-group">
+                    <label for="name">Full Name</label>
+                    <input
+                      type="text"
+                      id="name"
+                      class="messageium-form-control"
+                      placeholder="John Doe"
+                      required
+                    />
+                    <div class="messageium-error-message" id="nameError">
+                      Please enter your name
+                    </div>
+                  </div>
+
+                  <div class="messageium-form-group">
+                    <label for="email">Email Address</label>
+                    <input
+                      type="email"
+                      id="email"
+                      class="messageium-form-control"
+                      placeholder="john@example.com"
+                      required
+                    />
+                    <div class="messageium-error-message" id="emailError">
+                      Please enter a valid email
+                    </div>
+                  </div>
+
+                  <div class="messageium-form-group">
+                    <label for="issueType">Issue Type</label>
+                    <select
+                      id="issueType"
+                      class="messageium-form-control"
+                      required
+                    >
+                      <option value="" disabled selected>
+                        Select an issue type
+                      </option>
+                      <option value="Technical Issue">Technical Issue</option>
+                      <option value="Account Problem">Account Problem</option>
+                      <option value="Billing Question">Billing Question</option>
+                      <option value="Feature Request">Feature Request</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    <div class="messageium-error-message" id="issueTypeError">
+                      Please select an issue type
+                    </div>
+                  </div>
+
+                  <div class="messageium-form-group">
+                    <label for="issueDescription">Describe the Issue</label>
+                    <textarea
+                      id="issueDescription"
+                      class="messageium-form-control"
+                      placeholder="Please provide as much detail as possible..."
+                      required
+                    ></textarea>
+                    <div
+                      class="messageium-error-message"
+                      id="issueDescriptionError"
+                    >
+                      Please describe your issue
+                    </div>
+                  </div>
+
+                  <div class="messageium-form-footer">
+                    <button
+                      type="submit"
+                      class="messageium-submit-btn"
+                      id="issueSubmitBtn"
+                    >
+                      Submit Report
+                    </button>
+                    <span class="messageium-back-link" id="issueBackLink"
+                      >Return to Support Options</span
+                    >
+                  </div>
+                </form>
+
+                <!-- Customer Support Form -->
+                <form class="messageium-form" id="customerSupportForm">
+                  <div class="messageium-form-header">
+                    <div class="messageium-back-btn" id="supportBackBtn">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <path d="M19 12H5M12 19l-7-7 7-7"></path>
+                      </svg>
+                    </div>
+                    <div class="messageium-form-title">
+                      Connect with Support
+                    </div>
+                  </div>
+
+                  <div class="messageium-form-group">
+                    <label for="supportName">Full Name</label>
+                    <input
+                      type="text"
+                      id="supportName"
+                      class="messageium-form-control"
+                      placeholder="John Doe"
+                      required
+                    />
+                    <div class="messageium-error-message" id="supportNameError">
+                      Please enter your name
+                    </div>
+                  </div>
+
+                  <div class="messageium-form-group">
+                    <label for="supportEmail">Email Address</label>
+                    <input
+                      type="email"
+                      id="supportEmail"
+                      class="messageium-form-control"
+                      placeholder="john@example.com"
+                      required
+                    />
+                    <div
+                      class="messageium-error-message"
+                      id="supportEmailError"
+                    >
+                      Please enter a valid email
+                    </div>
+                  </div>
+
+                  <div class="messageium-form-group">
+                    <label for="supportSubject">Subject</label>
+                    <input
+                      type="text"
+                      id="supportSubject"
+                      class="messageium-form-control"
+                      placeholder="How can we help you?"
+                      required
+                    />
+                    <div
+                      class="messageium-error-message"
+                      id="supportSubjectError"
+                    >
+                      Please enter a subject
+                    </div>
+                  </div>
+
+                  <div class="messageium-form-group">
+                    <label for="supportMessage">Message</label>
+                    <textarea
+                      id="supportMessage"
+                      class="messageium-form-control"
+                      placeholder="Please describe how we can help you..."
+                      required
+                    ></textarea>
+                    <div
+                      class="messageium-error-message"
+                      id="supportMessageError"
+                    >
+                      Please enter your message
+                    </div>
+                  </div>
+
+                  <div class="messageium-form-footer">
+                    <button
+                      type="submit"
+                      class="messageium-submit-btn"
+                      id="supportSubmitBtn"
+                    >
+                      Connect Me
+                    </button>
+                    <span class="messageium-back-link" id="supportBackLink"
+                      >Return to Support Options</span
+                    >
+                  </div>
+                </form>
+
+                <!-- Success Message -->
+                <div class="messageium-success" id="messageiumSuccess">
+                  <div class="messageium-success-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                      <path
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+                      />
+                    </svg>
+                  </div>
+                  <h3>Message Sent!</h3>
+                  <p>
+                    Thank you for reaching out. Our support team will get back
+                    to you shortly.
+                  </p>
+                  <button class="messageium-button primary" id="newRequestBtn">
+                    <span class="messageium-button-label"
+                      >Start New Request</span
+                    >
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <script>
+            document.addEventListener("DOMContentLoaded", function () {
+              // DOM Elements
+              const messageiumBubble =
+                document.getElementById("messageiumBubble");
+              const messageiumBadge =
+                document.getElementById("messageiumBadge");
+              const messageiumWindow =
+                document.getElementById("messageiumWindow");
+              const closeChat = document.getElementById("closeChat");
+              const messageiumWelcome =
+                document.getElementById("messageiumWelcome");
+              const reportIssueBtn = document.getElementById("reportIssueBtn");
+              const customerSupportBtn =
+                document.getElementById("customerSupportBtn");
+              const reportIssueForm =
+                document.getElementById("reportIssueForm");
+              const customerSupportForm = document.getElementById(
+                "customerSupportForm"
+              );
+              const issueBackBtn = document.getElementById("issueBackBtn");
+              const supportBackBtn = document.getElementById("supportBackBtn");
+              const issueBackLink = document.getElementById("issueBackLink");
+              const supportBackLink =
+                document.getElementById("supportBackLink");
+              const messageiumSuccess =
+                document.getElementById("messageiumSuccess");
+              const newRequestBtn = document.getElementById("newRequestBtn");
+              const messageiumLoading =
+                document.getElementById("messageiumLoading");
+
+              // Form Elements
+              const formElements = {
+                name: document.getElementById("name"),
+                email: document.getElementById("email"),
+                issueType: document.getElementById("issueType"),
+                issueDescription: document.getElementById("issueDescription"),
+                supportName: document.getElementById("supportName"),
+                supportEmail: document.getElementById("supportEmail"),
+                supportSubject: document.getElementById("supportSubject"),
+                supportMessage: document.getElementById("supportMessage"),
+              };
+
+              // Error Elements
+              const errorElements = {
+                nameError: document.getElementById("nameError"),
+                emailError: document.getElementById("emailError"),
+                issueTypeError: document.getElementById("issueTypeError"),
+                issueDescriptionError: document.getElementById(
+                  "issueDescriptionError"
+                ),
+                supportNameError: document.getElementById("supportNameError"),
+                supportEmailError: document.getElementById("supportEmailError"),
+                supportSubjectError: document.getElementById(
+                  "supportSubjectError"
+                ),
+                supportMessageError: document.getElementById(
+                  "supportMessageError"
+                ),
+              };
+
+              // Toggle chat window
+              messageiumBubble.addEventListener("click", function () {
+                if (messageiumWindow.classList.contains("active")) {
+                  messageiumWindow.classList.remove("active");
+                  setTimeout(() => {
+                    messageiumWindow.style.display = "none";
+                  }, 300);
+                } else {
+                  messageiumWindow.style.display = "flex";
+                  setTimeout(() => {
+                    messageiumWindow.classList.add("active");
+                  }, 10);
+                  messageiumBadge.style.display = "none";
+                }
+              });
+
+              // Close chat window
+              closeChat.addEventListener("click", function () {
+                messageiumWindow.classList.remove("active");
+                setTimeout(() => {
+                  messageiumWindow.style.display = "none";
+                }, 300);
+              });
+
+              // Report Issue Button
+              reportIssueBtn.addEventListener("click", function () {
+                fadeOut(messageiumWelcome);
+                setTimeout(() => {
+                  messageiumWelcome.style.display = "none";
+                  reportIssueForm.style.display = "flex";
+                  fadeIn(reportIssueForm);
+                }, 300);
+              });
+
+              // Customer Support Button
+              customerSupportBtn.addEventListener("click", function () {
+                fadeOut(messageiumWelcome);
+                setTimeout(() => {
+                  messageiumWelcome.style.display = "none";
+                  customerSupportForm.style.display = "flex";
+                  fadeIn(customerSupportForm);
+                }, 300);
+              });
+
+              // Back Buttons and Links
+              issueBackBtn.addEventListener("click", showWelcomeScreen);
+              supportBackBtn.addEventListener("click", showWelcomeScreen);
+              issueBackLink.addEventListener("click", showWelcomeScreen);
+              supportBackLink.addEventListener("click", showWelcomeScreen);
+
+              // New Request Button
+              newRequestBtn.addEventListener("click", showWelcomeScreen);
+
+              // Form Submissions
+              reportIssueForm.addEventListener("submit", function (e) {
+                e.preventDefault();
+                if (validateForm("issue")) {
+                  submitForm("issue");
+                }
+              });
+
+              customerSupportForm.addEventListener("submit", function (e) {
+                e.preventDefault();
+                if (validateForm("support")) {
+                  submitForm("support");
+                }
+              });
+
+              // Helper Functions
+              function showWelcomeScreen() {
+                fadeOut(reportIssueForm);
+                fadeOut(customerSupportForm);
+                fadeOut(messageiumSuccess);
+
+                setTimeout(() => {
+                  reportIssueForm.style.display = "none";
+                  customerSupportForm.style.display = "none";
+                  messageiumSuccess.style.display = "none";
+                  messageiumWelcome.style.display = "block";
+                  fadeIn(messageiumWelcome);
+                }, 300);
+              }
+
+              function validateForm(formType) {
+                let isValid = true;
+
+                if (formType === "issue") {
+                  // Validate Issue Form
+                  if (!formElements.name.value.trim()) {
+                    showError(formElements.name, errorElements.nameError);
+                    isValid = false;
+                  } else {
+                    hideError(formElements.name, errorElements.nameError);
+                  }
+
+                  if (!validateEmail(formElements.email.value)) {
+                    showError(formElements.email, errorElements.emailError);
+                    isValid = false;
+                  } else {
+                    hideError(formElements.email, errorElements.emailError);
+                  }
+
+                  if (!formElements.issueType.value) {
+                    showError(
+                      formElements.issueType,
+                      errorElements.issueTypeError
+                    );
+                    isValid = false;
+                  } else {
+                    hideError(
+                      formElements.issueType,
+                      errorElements.issueTypeError
+                    );
+                  }
+
+                  if (!formElements.issueDescription.value.trim()) {
+                    showError(
+                      formElements.issueDescription,
+                      errorElements.issueDescriptionError
+                    );
+                    isValid = false;
+                  } else {
+                    hideError(
+                      formElements.issueDescription,
+                      errorElements.issueDescriptionError
+                    );
+                  }
+                } else if (formType === "support") {
+                  // Validate Support Form
+                  if (!formElements.supportName.value.trim()) {
+                    showError(
+                      formElements.supportName,
+                      errorElements.supportNameError
+                    );
+                    isValid = false;
+                  } else {
+                    hideError(
+                      formElements.supportName,
+                      errorElements.supportNameError
+                    );
+                  }
+
+                  if (!validateEmail(formElements.supportEmail.value)) {
+                    showError(
+                      formElements.supportEmail,
+                      errorElements.supportEmailError
+                    );
+                    isValid = false;
+                  } else {
+                    hideError(
+                      formElements.supportEmail,
+                      errorElements.supportEmailError
+                    );
+                  }
+
+                  if (!formElements.supportSubject.value.trim()) {
+                    showError(
+                      formElements.supportSubject,
+                      errorElements.supportSubjectError
+                    );
+                    isValid = false;
+                  } else {
+                    hideError(
+                      formElements.supportSubject,
+                      errorElements.supportSubjectError
+                    );
+                  }
+
+                  if (!formElements.supportMessage.value.trim()) {
+                    showError(
+                      formElements.supportMessage,
+                      errorElements.supportMessageError
+                    );
+                    isValid = false;
+                  } else {
+                    hideError(
+                      formElements.supportMessage,
+                      errorElements.supportMessageError
+                    );
+                  }
+                }
+
+                return isValid;
+              }
+
+              function validateEmail(email) {
+                // Fixed email regex - removed problematic <script> tag
+                const re =
+                  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return re.test(String(email).toLowerCase());
+              }
+
+              function showError(input, errorElement) {
+                input.classList.add("error");
+                errorElement.style.display = "block";
+              }
+
+              function hideError(input, errorElement) {
+                input.classList.remove("error");
+                errorElement.style.display = "none";
+              }
+
+              function submitForm(formType) {
+                // Show loading spinner
+                messageiumLoading.style.display = "flex";
+
+                // Web3Forms endpoint
+                const web3FormsEndpoint = "https://api.web3forms.com/submit";
+
+                // Your Web3Forms access key - REPLACE THIS WITH YOUR ACTUAL KEY
+                const web3FormsAccessKey =
+                  "730d5f2b-8f44-4e96-9843-212c664a8634"; // Replace with your actual Web3Forms API key
+
+                let formData = new FormData();
+                formData.append("access_key", web3FormsAccessKey);
+
+                if (formType === "issue") {
+                  formData.append("name", formElements.name.value);
+                  formData.append("email", formElements.email.value);
+                  formData.append("issue_type", formElements.issueType.value);
+                  formData.append(
+                    "message",
+                    formElements.issueDescription.value
+                  );
+                  formData.append(
+                    "subject",
+                    "New Issue Report: " + formElements.issueType.value
+                  );
+                } else if (formType === "support") {
+                  formData.append("name", formElements.supportName.value);
+                  formData.append("email", formElements.supportEmail.value);
+                  formData.append("subject", formElements.supportSubject.value);
+                  formData.append("message", formElements.supportMessage.value);
+                }
+
+                // Add form identifier
+                formData.append(
+                  "from_page",
+                  window.location.hostname + " - " + formType + " form"
+                );
+
+                // Optional: For spam protection with Web3Forms
+                formData.append("botcheck", "");
+
+                // Send data using fetch
+                fetch(web3FormsEndpoint, {
+                  method: "POST",
+                  body: formData,
+                })
+                  .then((response) => {
+                    if (!response.ok) {
+                      throw new Error("Network response was not ok");
+                    }
+                    return response.json();
+                  })
+                  .then((data) => {
+                    console.log("Success:", data);
+
+                    // Hide loading spinner
+                    messageiumLoading.style.display = "none";
+
+                    // Reset form
+                    if (formType === "issue") {
+                      reportIssueForm.reset();
+                      fadeOut(reportIssueForm);
+                    } else if (formType === "support") {
+                      customerSupportForm.reset();
+                      fadeOut(customerSupportForm);
+                    }
+
+                    // Show success message
+                    setTimeout(() => {
+                      reportIssueForm.style.display = "none";
+                      customerSupportForm.style.display = "none";
+                      messageiumSuccess.style.display = "flex";
+                      fadeIn(messageiumSuccess);
+                    }, 300);
+                  })
+                  .catch((error) => {
+                    console.error("Error:", error);
+
+                    // Hide loading spinner
+                    messageiumLoading.style.display = "none";
+
+                    // Show error message
+                    alert(
+                      "There was a problem submitting your form. Please try again."
+                    );
+                  });
+              }
+
+              function fadeIn(element) {
+                element.style.opacity = "0";
+                setTimeout(() => {
+                  element.style.transition = "opacity 0.3s ease";
+                  element.style.opacity = "1";
+                }, 10);
+              }
+
+              function fadeOut(element) {
+                element.style.transition = "opacity 0.3s ease";
+                element.style.opacity = "0";
+              }
+            });
+          </script>
+        </body>
+      </html>
+
+      <div class="auth-card">
+        <h1 class="auth-title">Login to Messageium</h1>
+        <form id="login-form" class="auth-form">
+          <div class="form-group">
+            <label for="login-email" class="form-label">Email Address</label>
+            <input
+              type="email"
+              id="login-email"
+              class="form-input"
+              placeholder="your@email.com"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="login-password" class="form-label">Password</label>
+            <input
+              type="password"
+              id="login-password"
+              class="form-input"
+              placeholder="Your password"
+              required
+            />
+          </div>
+          <div id="login-error" class="auth-error" style="display: none"></div>
+          <button type="submit" id="login-btn" class="auth-btn">Login</button>
+        </form>
+        <div class="auth-switch">
+          Don't have an account? <a id="to-signup">Sign up</a>
         </div>
-        <h1>We're Currently Under Maintenance</h1>
-        <p>We're working hard to improve our website and will be back shortly. Thank you for your patience.</p>
-        
-        <div class="status-bar">
-            <div class="status-progress"></div>
+        <div class="auth-switch">
+          <a id="to-reset-password">Forgot password?</a>
         </div>
-        
-        <p>Our team is performing scheduled maintenance to enhance your experience.</p>
-        <div class="estimated-time">Estimated completion: 5 hours</div>
-        
-        <div class="social-links">
-            <a href="#" title="Email us">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                    <polyline points="22,6 12,13 2,6"></polyline>
-                </svg>
-            </a>
-            <a href="#" title="Twitter">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
-                </svg>
-            </a>
-            <a href="#" title="Instagram">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                </svg>
-            </a>
-        </div>
+      </div>
     </div>
-</body>
+
+    <!-- Signup Section -->
+    <div id="signup-section" class="auth-container" style="display: none">
+      <div class="auth-card">
+        <h1 class="auth-title">Create an Account</h1>
+        <form id="signup-form" class="auth-form">
+          <div class="form-group">
+            <label for="signup-email" class="form-label">Email Address</label>
+            <input
+              type="email"
+              id="signup-email"
+              class="form-input"
+              placeholder="your@email.com"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="signup-password" class="form-label">Password</label>
+            <input
+              type="password"
+              id="signup-password"
+              class="form-input"
+              placeholder="Create a password"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="signup-confirm" class="form-label"
+              >Confirm Password</label
+            >
+            <input
+              type="password"
+              id="signup-confirm"
+              class="form-input"
+              placeholder="Confirm your password"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="signup-phone" class="form-label">Phone Number</label>
+            <input
+              type="tel"
+              id="signup-phone"
+              class="form-input"
+              placeholder="9471XXXXXXX"
+              required
+            />
+          </div>
+          <div id="signup-error" class="auth-error" style="display: none"></div>
+          <button type="submit" id="signup-btn" class="auth-btn">
+            Sign Up
+          </button>
+        </form>
+        <div class="auth-switch">
+          Already have an account? <a id="to-login">Login</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Email Verification Section -->
+    <div id="verification-section" class="auth-container" style="display: none">
+      <div class="auth-card">
+        <div class="auth-title">Verify Your Email</div>
+        <p class="auth-form">
+          We've sent a verification link to
+          <span id="verification-email"></span>
+        </p>
+        <p>
+          Please check your inbox and click the link to verify your email
+          address.
+        </p>
+        <div class="form-group">
+          <button id="check-verification-btn" class="auth-btn">
+            I've Verified My Email
+          </button>
+          <button id="resend-verification-btn" class="auth-btn">
+            Resend Verification Email
+          </button>
+          <button id="logout-from-verification-btn" class="auth-btn">
+            Use Another Account
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- OTP Verification Section -->
+    <div
+      id="otp-verification-section"
+      class="auth-container"
+      style="display: none"
+    >
+      <div class="auth-card">
+        <h1 class="auth-title">Verify Your Phone Number</h1>
+        <p>We have sent an OTP to your phone number. Please enter it below.</p>
+        <form id="otp-form" class="auth-form">
+          <div class="form-group">
+            <label for="otp-code" class="form-label">OTP Code</label>
+            <input
+              type="text"
+              id="otp-code"
+              class="form-input"
+              placeholder="Enter 6-digit OTP"
+              required
+            />
+          </div>
+          <div id="otp-error" class="auth-error" style="display: none"></div>
+          <button type="submit" id="verify-otp-btn" class="auth-btn">
+            Verify OTP
+          </button>
+        </form>
+        <div class="auth-switch">
+          <a id="resend-otp">Resend OTP</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reset Password Section -->
+    <div
+      id="reset-password-section"
+      class="auth-container"
+      style="display: none"
+    >
+      <div class="auth-card">
+        <h1 class="auth-title">Reset Password</h1>
+        <form id="reset-password-form" class="auth-form">
+          <div class="form-group">
+            <label for="reset-email" class="form-label">Email Address</label>
+            <input
+              type="email"
+              id="reset-email"
+              class="form-input"
+              placeholder="your@email.com"
+              required
+            />
+          </div>
+          <div id="reset-error" class="auth-error" style="display: none"></div>
+          <div
+            id="reset-success"
+            class="auth-success"
+            style="display: none"
+          ></div>
+          <button type="submit" id="reset-btn" class="auth-btn">
+            Send Reset Link
+          </button>
+        </form>
+        <div class="auth-switch">
+          <a id="back-to-login">Back to Login</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Setup Section -->
+    <div id="profile-section" class="auth-container" style="display: none">
+      <div class="auth-card">
+        <h1 class="auth-title">Set Up Your Profile</h1>
+        <form id="profile-form" class="auth-form">
+          <div class="profile-pic-setup">
+            <div id="profile-pic-preview" class="profile-pic-preview">?</div>
+          </div>
+          <div class="form-group">
+            <label for="display-name" class="form-label">Display Name</label>
+            <input
+              type="text"
+              id="display-name"
+              class="form-input"
+              placeholder="How others will see you"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="avatar-color" class="form-label">Avatar Color</label>
+            <input
+              type="color"
+              id="avatar-color"
+              class="form-input"
+              value="#128C7E"
+            />
+          </div>
+          <div
+            id="profile-error"
+            class="auth-error"
+            style="display: none"
+          ></div>
+          <button type="submit" id="profile-btn" class="auth-btn">
+            Continue to Chat
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Chat Section -->
+    <div id="chat-section" class="app-container" style="display: none">
+      <header>
+        <div class="logo">Messageium</div>
+        <div class="user-info">
+          <div id="user-pic" class="profile-pic"></div>
+          <span id="user-name" class="username">User</span>
+          <button id="logout-btn" class="logout-btn">Logout</button>
+        </div>
+      </header>
+
+      <div class="chat-container">
+        <div class="users-sidebar">
+          <div class="sidebar-header">All Users</div>
+          <div id="users-list" class="users-list"></div>
+        </div>
+
+        <div class="chat-content">
+          <div id="empty-chat" class="empty-chat">
+            <div class="empty-chat-icon">💬</div>
+            <h3>Select a user to start chatting</h3>
+            <p>Choose someone from the list to start a private conversation</p>
+          </div>
+
+          <div id="delete-dialog" class="delete-dialog" style="display: none">
+            <div class="delete-options">
+              <button
+                class="delete-for-me-btn"
+                onclick="deleteMessage(event, 'forMe')"
+              >
+                Delete for me
+              </button>
+              <button
+                class="delete-for-everyone-btn"
+                onclick="deleteMessage(event, 'forEveryone')"
+              >
+                Delete for everyone
+              </button>
+              <button class="cancel-delete-btn" onclick="closeDeleteDialog()">
+                Cancel
+              </button>
+            </div>
+          </div>
+
+          <div
+            id="active-chat"
+            style="
+              display: none;
+              flex-direction: column;
+              flex: 1;
+              overflow: hidden;
+            "
+          >
+            <div id="chat-header" class="chat-header">
+              <div id="recipient-avatar" class="user-avatar">JD</div>
+              <span id="recipient-name" class="chat-recipient">John Doe</span>
+            </div>
+            <div class="mobile-chat-header" style="display: none">
+              <button class="back-button"></button>
+              <div id="mobile-recipient-avatar" class="user-avatar">JD</div>
+              <div id="mobile-recipient-name" class="chat-recipient">
+                John Doe
+              </div>
+            </div>
+            <div id="messages" class="messages-container"></div>
+            <div class="input-container">
+              <input
+                type="text"
+                id="message-input"
+                class="message-input"
+                placeholder="Type a message..."
+                autocomplete="off"
+              />
+              <button id="send-btn" class="send-btn"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loader-overlay" class="loader-overlay" style="display: none">
+      <div class="loader"></div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" style="display: none"></div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.19.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.19.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.19.1/firebase-firestore-compat.js"></script>
+
+    <script>
+      // Firebase Configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyAK-NzCqQSCiLn5WSSf-5tWbsO5nSyubEk",
+        authDomain: "best-msg-4cb83.firebaseapp.com",
+        projectId: "best-msg-4cb83",
+        storageBucket: "best-msg-4cb83.firebasestorage.app",
+        messagingSenderId: "94214242826",
+        appId: "1:94214242826:web:f02a0deb024e43a32fd5f3",
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+      const db = firebase.firestore();
+
+      // DOM Elements - Auth
+      const loginSection = document.getElementById("login-section");
+      const signupSection = document.getElementById("signup-section");
+      const verificationSection = document.getElementById(
+        "verification-section"
+      );
+      const otpVerificationSection = document.getElementById(
+        "otp-verification-section"
+      );
+      const resetPasswordSection = document.getElementById(
+        "reset-password-section"
+      );
+      const profileSection = document.getElementById("profile-section");
+      const chatSection = document.getElementById("chat-section");
+      const loaderOverlay = document.getElementById("loader-overlay");
+
+      const loginForm = document.getElementById("login-form");
+      const loginEmail = document.getElementById("login-email");
+      const loginPassword = document.getElementById("login-password");
+      const loginError = document.getElementById("login-error");
+
+      const signupForm = document.getElementById("signup-form");
+      const signupEmail = document.getElementById("signup-email");
+      const signupPassword = document.getElementById("signup-password");
+      const signupConfirm = document.getElementById("signup-confirm");
+      const signupPhone = document.getElementById("signup-phone");
+      const signupError = document.getElementById("signup-error");
+
+      const verificationEmailSpan =
+        document.getElementById("verification-email");
+      const checkVerificationBtn = document.getElementById(
+        "check-verification-btn"
+      );
+      const resendVerificationBtn = document.getElementById(
+        "resend-verification-btn"
+      );
+      const logoutFromVerificationBtn = document.getElementById(
+        "logout-from-verification-btn"
+      );
+
+      const otpForm = document.getElementById("otp-form");
+      const otpCodeInput = document.getElementById("otp-code");
+      const otpError = document.getElementById("otp-error");
+      const resendOtp = document.getElementById("resend-otp");
+
+      const resetPasswordForm = document.getElementById("reset-password-form");
+      const resetEmail = document.getElementById("reset-email");
+      const resetError = document.getElementById("reset-error");
+      const resetSuccess = document.getElementById("reset-success");
+
+      const profileForm = document.getElementById("profile-form");
+      const displayName = document.getElementById("display-name");
+      const avatarColor = document.getElementById("avatar-color");
+      const profilePicPreview = document.getElementById("profile-pic-preview");
+      const profileError = document.getElementById("profile-error");
+
+      // DOM Elements - Chat
+      const logoutBtn = document.getElementById("logout-btn");
+      const usersList = document.getElementById("users-list");
+      const emptyChat = document.getElementById("empty-chat");
+      const activeChat = document.getElementById("active-chat");
+      const chatHeader = document.getElementById("chat-header");
+      const recipientAvatar = document.getElementById("recipient-avatar");
+      const recipientName = document.getElementById("recipient-name");
+      const mobileRecipientAvatar = document.getElementById(
+        "mobile-recipient-avatar"
+      );
+      const mobileRecipientName = document.getElementById(
+        "mobile-recipient-name"
+      );
+      const messagesContainer = document.getElementById("messages");
+      let messageInput = document.getElementById("message-input");
+      let sendBtn = document.getElementById("send-btn");
+      const userPic = document.getElementById("user-pic");
+      const userName = document.getElementById("user-name");
+      const backButton = document.querySelector(".back-button");
+      const mobileChatHeader = document.querySelector(".mobile-chat-header");
+
+      // Global Variables
+      let currentUser = null;
+      let userProfile = null;
+      let selectedUser = null;
+      let messagesUnsubscribe = null;
+      let usersUnsubscribe = null;
+
+      // Utility Functions
+      function showLoader() {
+        if (loaderOverlay) loaderOverlay.style.display = "flex";
+      }
+
+      function hideLoader() {
+        if (loaderOverlay) loaderOverlay.style.display = "none";
+      }
+
+      function showToast(message, type = "success") {
+        let toastContainer = document.getElementById("toast-container");
+        if (!toastContainer) {
+          toastContainer = document.createElement("div");
+          toastContainer.id = "toast-container";
+          document.body.appendChild(toastContainer);
+        }
+
+        const existingToasts = toastContainer.querySelectorAll(".toast");
+        existingToasts.forEach((toast) => toast.remove());
+
+        const toast = document.createElement("div");
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        toastContainer.appendChild(toast);
+        toastContainer.style.display = "block";
+
+        setTimeout(() => {
+          toast.remove();
+          if (toastContainer.children.length === 0) {
+            toastContainer.style.display = "none";
+          }
+        }, 3000);
+      }
+
+      function isMobile() {
+        return window.innerWidth <= 768;
+      }
+
+      function clearFormErrors() {
+        if (loginError) loginError.style.display = "none";
+        if (signupError) signupError.style.display = "none";
+        if (resetError) resetError.style.display = "none";
+        if (resetSuccess) resetSuccess.style.display = "none";
+        if (profileError) profileError.style.display = "none";
+        if (otpError) otpError.style.display = "none";
+      }
+
+      function formatLastSeen(timestamp) {
+        if (!timestamp) return "Last seen: Unknown";
+        const date = timestamp.toDate();
+        const now = new Date();
+        const diff = Math.floor((now - date) / 1000 / 60);
+        if (diff < 1) return "Online";
+        if (diff < 60)
+          return `Last seen: ${diff} min${diff > 1 ? "s" : ""} ago`;
+        if (diff < 1440)
+          return `Last seen: ${Math.floor(diff / 60)} hr${
+            Math.floor(diff / 60) > 1 ? "s" : ""
+          } ago`;
+        return `Last seen: ${date.toLocaleDateString()} ${date.toLocaleTimeString(
+          [],
+          { hour: "2-digit", minute: "2-digit" }
+        )}`;
+      }
+
+      // SMS Gateway Functions
+      async function sendSMS(to, message) {
+        const userId = "29318"; // Replace with your Notify.lk user ID
+        const apiKey = "g9s0WKlpTNpXUDXYwBgX"; // Replace with your Notify.lk API key
+        const senderId = "Messageium";
+        const url = "https://app.notify.lk/api/v1/send";
+
+        const formData = new URLSearchParams();
+        formData.append("user_id", userId);
+        formData.append("api_key", apiKey);
+        formData.append("sender_id", senderId);
+        formData.append("to", to);
+        formData.append("message", message);
+
+        try {
+          const response = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: formData,
+          });
+          const data = await response.json();
+          if (data.status !== "success") throw new Error("Failed to send SMS");
+        } catch (error) {
+          console.error("Error sending SMS:", error);
+          showToast("Failed to send SMS. Please try again.", "error");
+          throw error;
+        }
+      }
+
+      async function sendOTP(userId, phone) {
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const expiration = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+
+        await db.collection("users").doc(userId).update({
+          otpCode: otp,
+          otpExpiration: expiration,
+        });
+
+        const message = `Your one-time password is ${otp}.This code will expire in 5 minutes For security reasons.`;
+        await sendSMS(phone, message);
+      }
+
+      // Navigation and Setup
+      document.addEventListener("DOMContentLoaded", function () {
+        const toSignup = document.getElementById("to-signup");
+        if (toSignup) {
+          toSignup.addEventListener("click", () => {
+            if (loginSection) loginSection.style.display = "none";
+            if (signupSection) signupSection.style.display = "flex";
+            clearFormErrors();
+          });
+        }
+
+        const toLogin = document.getElementById("to-login");
+        if (toLogin) {
+          toLogin.addEventListener("click", () => {
+            if (signupSection) signupSection.style.display = "none";
+            if (loginSection) loginSection.style.display = "flex";
+            clearFormErrors();
+          });
+        }
+
+        const toResetPassword = document.getElementById("to-reset-password");
+        if (toResetPassword) {
+          toResetPassword.addEventListener("click", () => {
+            if (loginSection) loginSection.style.display = "none";
+            if (resetPasswordSection)
+              resetPasswordSection.style.display = "flex";
+            clearFormErrors();
+          });
+        }
+
+        const backToLogin = document.getElementById("back-to-login");
+        if (backToLogin) {
+          backToLogin.addEventListener("click", () => {
+            if (resetPasswordSection)
+              resetPasswordSection.style.display = "none";
+            if (loginSection) loginSection.style.display = "flex";
+            clearFormErrors();
+          });
+        }
+
+        setupMobileView();
+        window.addEventListener("resize", setupMobileView);
+      });
+
+      function setupMobileView() {
+        const mobile = isMobile();
+        const chatContent = document.querySelector(".chat-content");
+        const usersSidebar = document.querySelector(".users-sidebar");
+
+        if (!chatContent || !usersSidebar) return;
+
+        if (mobile) {
+          if (chatHeader && mobileChatHeader) {
+            chatHeader.style.display = "none";
+            mobileChatHeader.style.display = "flex";
+          }
+
+          if (backButton) {
+            backButton.addEventListener("click", function () {
+              chatContent.classList.remove("active");
+            });
+          }
+        } else {
+          if (chatHeader && mobileChatHeader) {
+            chatHeader.style.display = "flex";
+            mobileChatHeader.style.display = "none";
+          }
+          chatContent.classList.remove("active");
+        }
+      }
+
+      function setupUserItemsClickEvent() {
+        const userItems = document.querySelectorAll(".user-item");
+        const chatContent = document.querySelector(".chat-content");
+
+        if (!chatContent) return;
+
+        userItems.forEach((item) => {
+          item.removeEventListener("click", handleUserItemClick);
+          item.addEventListener("click", handleUserItemClick);
+        });
+
+        function handleUserItemClick() {
+          if (isMobile()) {
+            chatContent.classList.add("active");
+            setTimeout(scrollToBottom, 100);
+          }
+        }
+      }
+
+      // Form Event Listeners
+      if (loginForm) {
+        loginForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          clearFormErrors();
+
+          const email = loginEmail?.value.trim() || "";
+          const password = loginPassword?.value || "";
+
+          if (!email || !password) {
+            if (loginError) {
+              loginError.textContent = "Please enter both email and password";
+              loginError.style.display = "block";
+            }
+            return;
+          }
+
+          showLoader();
+
+          try {
+            await auth.signInWithEmailAndPassword(email, password);
+          } catch (error) {
+            hideLoader();
+            if (loginError) {
+              loginError.textContent = error.message;
+              loginError.style.display = "block";
+            }
+          }
+        });
+      }
+
+      if (signupForm) {
+        signupForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          clearFormErrors();
+
+          const email = signupEmail?.value.trim() || "";
+          const password = signupPassword?.value || "";
+          const confirm = signupConfirm?.value || "";
+          const phone = signupPhone?.value.trim() || "";
+
+          if (!email || !password || !confirm || !phone) {
+            if (signupError) {
+              signupError.textContent = "Please fill out all fields";
+              signupError.style.display = "block";
+            }
+            return;
+          }
+
+          if (password !== confirm) {
+            if (signupError) {
+              signupError.textContent = "Passwords do not match";
+              signupError.style.display = "block";
+            }
+            return;
+          }
+
+          if (password.length < 6) {
+            if (signupError) {
+              signupError.textContent =
+                "Password must be at least 6 characters";
+              signupError.style.display = "block";
+            }
+            return;
+          }
+
+          if (!/^94\d{9}$/.test(phone)) {
+            if (signupError) {
+              signupError.textContent =
+                "Phone number must be in the format 9471XXXXXXX";
+              signupError.style.display = "block";
+            }
+            return;
+          }
+
+          showLoader();
+
+          try {
+            const userCredential = await auth.createUserWithEmailAndPassword(
+              email,
+              password
+            );
+            await userCredential.user.sendEmailVerification();
+            await db.collection("users").doc(userCredential.user.uid).set({
+              email: email,
+              phone: phone,
+              phoneVerified: false,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+            if (verificationEmailSpan)
+              verificationEmailSpan.textContent = email;
+            if (signupSection) signupSection.style.display = "none";
+            if (verificationSection) verificationSection.style.display = "flex";
+            hideLoader();
+          } catch (error) {
+            hideLoader();
+            if (signupError) {
+              signupError.textContent = error.message;
+              signupError.style.display = "block";
+            }
+          }
+        });
+      }
+
+      if (checkVerificationBtn) {
+        checkVerificationBtn.addEventListener("click", async () => {
+          showLoader();
+          try {
+            await auth.currentUser.reload();
+            if (auth.currentUser.emailVerified) {
+              const userDoc = await db
+                .collection("users")
+                .doc(auth.currentUser.uid)
+                .get();
+              if (userDoc.exists) {
+                const userData = userDoc.data();
+                if (userData.phoneVerified) {
+                  if (verificationSection)
+                    verificationSection.style.display = "none";
+                  if (profileSection) profileSection.style.display = "flex";
+                } else {
+                  await sendOTP(auth.currentUser.uid, userData.phone);
+                  if (verificationSection)
+                    verificationSection.style.display = "none";
+                  if (otpVerificationSection)
+                    otpVerificationSection.style.display = "flex";
+                }
+              }
+            } else {
+              showToast(
+                "Your email is not verified yet. Please check your inbox.",
+                "warning"
+              );
+            }
+            hideLoader();
+          } catch (error) {
+            hideLoader();
+            showToast(error.message, "error");
+          }
+        });
+      }
+
+      if (resendVerificationBtn) {
+        resendVerificationBtn.addEventListener("click", async () => {
+          showLoader();
+          try {
+            await auth.currentUser.sendEmailVerification();
+            showToast(
+              "Verification email resent. Please check your inbox.",
+              "success"
+            );
+            hideLoader();
+          } catch (error) {
+            hideLoader();
+            showToast(error.message, "error");
+          }
+        });
+      }
+
+      if (logoutFromVerificationBtn) {
+        logoutFromVerificationBtn.addEventListener("click", async () => {
+          try {
+            await auth.signOut();
+          } catch (error) {
+            showToast(error.message, "error");
+          }
+        });
+      }
+
+      if (otpForm) {
+        otpForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          clearFormErrors();
+          const otp = otpCodeInput?.value.trim() || "";
+
+          if (!otp || otp.length !== 6) {
+            if (otpError) {
+              otpError.textContent = "Please enter a valid 6-digit OTP";
+              otpError.style.display = "block";
+            }
+            return;
+          }
+
+          showLoader();
+          try {
+            const userDoc = await db
+              .collection("users")
+              .doc(auth.currentUser.uid)
+              .get();
+            if (userDoc.exists) {
+              const userData = userDoc.data();
+              const now = new Date();
+              if (
+                userData.otpCode === otp &&
+                userData.otpExpiration &&
+                userData.otpExpiration.toDate() > now
+              ) {
+                await db.collection("users").doc(auth.currentUser.uid).update({
+                  phoneVerified: true,
+                  otpCode: firebase.firestore.FieldValue.delete(),
+                  otpExpiration: firebase.firestore.FieldValue.delete(),
+                });
+                await sendSMS(
+                  userData.phone,
+                  "Thank you for registering with Messageium!"
+                );
+                if (otpVerificationSection)
+                  otpVerificationSection.style.display = "none";
+                if (profileSection) profileSection.style.display = "flex";
+              } else {
+                if (otpError) {
+                  otpError.textContent = "Invalid or expired OTP";
+                  otpError.style.display = "block";
+                }
+              }
+            }
+            hideLoader();
+          } catch (error) {
+            hideLoader();
+            showToast(error.message, "error");
+          }
+        });
+      }
+
+      if (resendOtp) {
+        resendOtp.addEventListener("click", async () => {
+          showLoader();
+          try {
+            const userDoc = await db
+              .collection("users")
+              .doc(auth.currentUser.uid)
+              .get();
+            if (userDoc.exists) {
+              await sendOTP(auth.currentUser.uid, userDoc.data().phone);
+              showToast("OTP resent successfully", "success");
+            }
+            hideLoader();
+          } catch (error) {
+            hideLoader();
+            showToast(error.message, "error");
+          }
+        });
+      }
+
+      if (resetPasswordForm) {
+        resetPasswordForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          clearFormErrors();
+
+          const email = resetEmail?.value.trim() || "";
+
+          if (!email) {
+            if (resetError) {
+              resetError.textContent = "Please enter your email address";
+              resetError.style.display = "block";
+            }
+            return;
+          }
+
+          showLoader();
+
+          try {
+            await auth.sendPasswordResetEmail(email);
+            if (resetSuccess) {
+              resetSuccess.textContent =
+                "Password reset link sent to your email";
+              resetSuccess.style.display = "block";
+            }
+            if (resetEmail) resetEmail.value = "";
+            hideLoader();
+          } catch (error) {
+            hideLoader();
+            if (resetError) {
+              resetError.textContent = error.message;
+              resetError.style.display = "block";
+            }
+          }
+        });
+      }
+
+      if (profileForm) {
+        profileForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          clearFormErrors();
+
+          const name = displayName?.value.trim() || "";
+          const color = avatarColor?.value || "#128C7E";
+
+          if (!name) {
+            if (profileError) {
+              profileError.textContent = "Please enter a display name";
+              profileError.style.display = "block";
+            }
+            return;
+          }
+
+          showLoader();
+
+          try {
+            await db.collection("users").doc(auth.currentUser.uid).update({
+              displayName: name,
+              avatarColor: color,
+              lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+            if (profileSection) profileSection.style.display = "none";
+            if (chatSection) chatSection.style.display = "flex";
+            hideLoader();
+          } catch (error) {
+            hideLoader();
+            if (profileError) {
+              profileError.textContent = error.message;
+              profileError.style.display = "block";
+            }
+          }
+        });
+      }
+
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", async () => {
+          try {
+            await auth.signOut();
+          } catch (error) {
+            showToast(error.message, "error");
+          }
+        });
+      }
+
+      if (avatarColor && displayName) {
+        avatarColor.addEventListener("input", updateAvatarPreview);
+        displayName.addEventListener("input", updateAvatarPreview);
+      }
+
+      // Chat Functions
+      function updateAvatarPreview() {
+        if (!profilePicPreview || !displayName || !avatarColor) return;
+        const initials = displayName.value.trim()
+          ? displayName.value.trim()[0].toUpperCase()
+          : "?";
+        profilePicPreview.style.backgroundColor = avatarColor.value;
+        profilePicPreview.textContent = initials;
+      }
+
+      function generateAvatar(name, color) {
+        const initial = name ? name[0].toUpperCase() : "?";
+        const avatar = document.createElement("div");
+        avatar.className = "user-avatar";
+        avatar.style.backgroundColor = color || "#128C7E";
+        avatar.textContent = initial;
+        return avatar;
+      }
+
+      function setupChatFunctionality() {
+        if (!messageInput || !sendBtn) return;
+
+        const newMessageInput = messageInput.cloneNode(true);
+        const newSendBtn = sendBtn.cloneNode(true);
+
+        if (messageInput.parentNode) {
+          messageInput.parentNode.replaceChild(newMessageInput, messageInput);
+        }
+
+        if (sendBtn.parentNode) {
+          sendBtn.parentNode.replaceChild(newSendBtn, sendBtn);
+        }
+
+        messageInput = newMessageInput;
+        sendBtn = newSendBtn;
+
+        sendBtn.disabled = !messageInput.value.trim();
+
+        messageInput.addEventListener("input", () => {
+          sendBtn.disabled = !messageInput.value.trim();
+        });
+
+        sendBtn.addEventListener("click", sendMessage);
+
+        messageInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+          }
+        });
+      }
+
+      async function sendMessage() {
+        if (
+          !messageInput ||
+          !messageInput.value.trim() ||
+          !selectedUser ||
+          !currentUser
+        )
+          return;
+
+        const messageText = messageInput.value.trim();
+        messageInput.value = "";
+        sendBtn.disabled = true;
+
+        try {
+          const chatId = [currentUser.uid, selectedUser.id].sort().join("_");
+          const messageRef = db
+            .collection("chats")
+            .doc(chatId)
+            .collection("messages")
+            .doc();
+
+          await messageRef.set({
+            text: messageText,
+            senderId: currentUser.uid,
+            receiverId: selectedUser.id,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            status: "sent",
+            isDeleted: false,
+          });
+
+          await messageRef.update({ status: "delivered" });
+
+          await db.collection("users").doc(currentUser.uid).update({
+            lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+          });
+        } catch (error) {
+          showToast(error.message, "error");
+        } finally {
+          sendBtn.disabled = false;
+        }
+      }
+
+      function showDeleteOptions(messageId) {
+        const deleteDialog = document.getElementById("delete-dialog");
+        if (!deleteDialog) return;
+
+        deleteDialog.dataset.messageId = messageId;
+        deleteDialog.style.display = "flex";
+      }
+
+      function closeDeleteDialog() {
+        const deleteDialog = document.getElementById("delete-dialog");
+        if (deleteDialog) {
+          deleteDialog.style.display = "none";
+          deleteDialog.removeAttribute("data-messageId");
+        }
+      }
+
+      async function deleteMessage(event, type) {
+        event.preventDefault();
+        const deleteDialog = document.getElementById("delete-dialog");
+        if (!deleteDialog || !currentUser || !selectedUser) return;
+
+        const messageId = deleteDialog.dataset.messageId;
+        if (!messageId) return;
+
+        const chatId = [currentUser.uid, selectedUser.id].sort().join("_");
+        const messageRef = db
+          .collection("chats")
+          .doc(chatId)
+          .collection("messages")
+          .doc(messageId);
+
+        try {
+          showLoader();
+
+          if (type === "forEveryone") {
+            await messageRef.update({
+              isDeleted: true,
+              text: "This message was deleted",
+              status: "deleted",
+            });
+          } else {
+            await db.collection("deletedMessages").add({
+              chatId: chatId,
+              messageId: messageId,
+              userId: currentUser.uid,
+              timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+
+            const messageElement = document.querySelector(
+              `.message[data-id="${messageId}"]`
+            );
+            if (messageElement) {
+              messageElement.innerHTML =
+                '<i class="deleted-message-text">This message was deleted</i>';
+              messageElement.classList.add("deleted-for-me");
+            }
+          }
+
+          closeDeleteDialog();
+          showToast(
+            `Message deleted ${
+              type === "forEveryone" ? "for everyone" : "for you"
+            }`,
+            "success"
+          );
+        } catch (error) {
+          console.error("Error deleting message:", error);
+          showToast(error.message, "error");
+        } finally {
+          hideLoader();
+        }
+      }
+
+      function displayMessage(message, isNew = false) {
+        if (!messagesContainer || !currentUser) return null;
+
+        if (document.querySelector(`.message[data-id="${message.id}"]`)) {
+          return null;
+        }
+
+        const messageDiv = document.createElement("div");
+        messageDiv.className = `message ${
+          message.senderId === currentUser.uid ? "my-message" : "other-message"
+        }`;
+        messageDiv.dataset.id = message.id;
+
+        const timestamp = message.timestamp
+          ? message.timestamp.toDate()
+          : new Date();
+        const time = timestamp.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+
+        const isMine = message.senderId === currentUser.uid;
+        let senderName = isMine
+          ? userProfile?.displayName || "Me"
+          : selectedUser?.displayName || "User";
+        let senderColor = isMine
+          ? userProfile?.avatarColor || "#128C7E"
+          : selectedUser?.avatarColor || "#128C7E";
+
+        let statusHTML = "";
+        if (isMine && !message.isDeleted) {
+          switch (message.status) {
+            case "sent":
+              statusHTML = '<span class="message-status sent">✓</span>';
+              break;
+            case "delivered":
+              statusHTML = '<span class="message-status delivered">✓✓</span>';
+              break;
+            case "read":
+              statusHTML = '<span class="message-status read">✓✓</span>';
+              break;
+          }
+        }
+
+        messageDiv.innerHTML = isMine
+          ? `
+            <div class="message-header">
+                <span class="message-time">${time}</span>
+                ${statusHTML}
+            </div>
+            <div class="message-content">
+                ${
+                  message.isDeleted
+                    ? '<i class="deleted-message-text">This message was deleted</i>'
+                    : `<div class="message-text">${message.text}</div>
+                       <div class="message-actions">
+                           <button class="delete-message-btn" onclick="showDeleteOptions('${message.id}')">
+                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                   <polyline points="3 6 5 6 21 6"></polyline>
+                                   <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                               </svg>
+                           </button>
+                       </div>`
+                }
+            </div>
+          `
+          : `
+            <div class="message-header">
+                <div class="user-avatar" style="background-color: ${senderColor};">${senderName
+              .charAt(0)
+              .toUpperCase()}</div>
+                <span class="message-sender">${senderName}</span>
+                <span class="message-time">${time}</span>
+            </div>
+            <div class="message-content">
+                ${
+                  message.isDeleted
+                    ? '<i class="deleted-message-text">This message was deleted</i>'
+                    : `<div class="message-text">${message.text}</div>`
+                }
+            </div>
+          `;
+
+        messagesContainer.appendChild(messageDiv);
+
+        if (
+          !isMine &&
+          !message.isDeleted &&
+          message.status !== "read" &&
+          isNew
+        ) {
+          const chatId = [currentUser.uid, message.senderId].sort().join("_");
+          db.collection("chats")
+            .doc(chatId)
+            .collection("messages")
+            .doc(message.id)
+            .update({ status: "read" })
+            .catch((error) =>
+              console.error("Error updating message status:", error)
+            );
+        }
+
+        if (isNew) scrollToBottom();
+        return messageDiv;
+      }
+
+      function selectUser(user) {
+        if (!usersList || !messagesContainer || !currentUser) return;
+
+        const activeUserElements =
+          document.querySelectorAll(".user-item.active");
+        activeUserElements.forEach((el) => el.classList.remove("active"));
+
+        selectedUser = user;
+        const userElement = document.getElementById(`user-${user.id}`);
+        if (userElement) userElement.classList.add("active");
+
+        messagesContainer.innerHTML =
+          '<div class="loading-messages">Loading...</div>';
+
+        if (emptyChat) emptyChat.style.display = "none";
+        if (activeChat) activeChat.style.display = "flex";
+
+        const userDisplayName =
+          user.displayName || user.email.split("@")[0] || "User";
+        const userAvatarColor = user.avatarColor || "#128C7E";
+        const userInitial = userDisplayName.charAt(0).toUpperCase();
+
+        if (recipientName)
+          recipientName.textContent = `${userDisplayName} (${formatLastSeen(
+            user.lastSeen
+          )})`;
+        if (mobileRecipientName)
+          mobileRecipientName.textContent = `${userDisplayName} (${formatLastSeen(
+            user.lastSeen
+          )})`;
+        if (recipientAvatar) {
+          recipientAvatar.textContent = userInitial;
+          recipientAvatar.style.backgroundColor = userAvatarColor;
+        }
+        if (mobileRecipientAvatar) {
+          mobileRecipientAvatar.textContent = userInitial;
+          mobileRecipientAvatar.style.backgroundColor = userAvatarColor;
+        }
+
+        setupChatFunctionality();
+
+        if (messagesUnsubscribe) messagesUnsubscribe();
+
+        const chatId = [currentUser.uid, user.id].sort().join("_");
+        const MESSAGES_PER_PAGE = 50;
+
+        db.collection("users")
+          .doc(currentUser.uid)
+          .update({
+            lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+          })
+          .catch((error) => console.error("Error updating lastSeen:", error));
+
+        Promise.all([
+          db.collection("deletedMessages").where("chatId", "==", chatId).get(),
+          db
+            .collection("chats")
+            .doc(chatId)
+            .collection("messages")
+            .orderBy("timestamp", "asc")
+            .limit(MESSAGES_PER_PAGE)
+            .get(),
+        ])
+          .then(([deletedSnapshot, messagesSnapshot]) => {
+            const deletedMessageIds = new Set(
+              deletedSnapshot.docs.map((doc) => doc.data().messageId)
+            );
+            messagesContainer.innerHTML = "";
+
+            messagesSnapshot.docs
+              .filter((doc) => !deletedMessageIds.has(doc.id))
+              .forEach((doc) => displayMessage({ id: doc.id, ...doc.data() }));
+
+            scrollToBottom();
+
+            messagesUnsubscribe = db
+              .collection("chats")
+              .doc(chatId)
+              .collection("messages")
+              .orderBy("timestamp", "asc")
+              .onSnapshot(
+                (snapshot) => {
+                  snapshot.docChanges().forEach((change) => {
+                    const message = { id: change.doc.id, ...change.doc.data() };
+                    if (deletedMessageIds.has(message.id)) return;
+
+                    if (change.type === "added") {
+                      displayMessage(message, true);
+                    } else if (change.type === "modified") {
+                      const existingMessage = document.querySelector(
+                        `.message[data-id="${message.id}"]`
+                      );
+                      if (existingMessage) {
+                        if (message.isDeleted) {
+                          existingMessage.innerHTML =
+                            '<i class="deleted-message-text">This message was deleted</i>';
+                          existingMessage.classList.add("deleted-for-me");
+                        } else if (message.senderId === currentUser.uid) {
+                          const statusElement =
+                            existingMessage.querySelector(".message-status");
+                          if (statusElement && message.status) {
+                            statusElement.className = `message-status ${message.status}`;
+                            statusElement.innerHTML =
+                              message.status === "sent" ? "✓" : "✓✓";
+                          }
+                        }
+                      }
+                    } else if (change.type === "removed") {
+                      const messageElement = document.querySelector(
+                        `.message[data-id="${message.id}"]`
+                      );
+                      if (messageElement) messageElement.remove();
+                    }
+                  });
+                  updateAllUnreadCounts();
+                },
+                (error) => {
+                  console.error("Error getting messages:", error);
+                  showToast(error.message, "error");
+                  messagesContainer.innerHTML =
+                    '<div class="message-error">Failed to load messages.</div>';
+                }
+              );
+          })
+          .catch((error) => {
+            console.error("Error loading messages:", error);
+            showToast(error.message, "error");
+            messagesContainer.innerHTML =
+              '<div class="message-error">Failed to load messages.</div>';
+          });
+      }
+
+      function loadUsers() {
+        if (!usersList || !currentUser) return;
+
+        if (usersUnsubscribe) usersUnsubscribe();
+        usersList.innerHTML = "";
+
+        usersUnsubscribe = db
+          .collection("users")
+          .where("email", "!=", currentUser.email)
+          .onSnapshot(
+            (snapshot) => {
+              snapshot.docChanges().forEach((change) => {
+                const user = { id: change.doc.id, ...change.doc.data() };
+                if (change.type === "added") addUserToList(user);
+                else if (change.type === "modified") updateUserInList(user);
+                else if (change.type === "removed") removeUserFromList(user.id);
+              });
+              setupUserItemsClickEvent();
+            },
+            (error) => {
+              console.error("Error getting users:", error);
+              showToast(error.message, "error");
+            }
+          );
+      }
+
+      function addUserToList(user) {
+        if (!usersList) return;
+
+        const userItem = document.createElement("div");
+        userItem.className = "user-item";
+        userItem.id = `user-${user.id}`;
+
+        const avatar = generateAvatar(user.displayName, user.avatarColor);
+        const unreadCount = document.createElement("span");
+        unreadCount.className = "unread-count";
+        unreadCount.style.display = "none";
+
+        userItem.innerHTML = `
+          <div class="user-status"></div>
+          <span class="user-name">${user.displayName}</span>
+          <span class="last-seen">${formatLastSeen(user.lastSeen)}</span>
+        `;
+        userItem.prepend(avatar);
+        userItem.appendChild(unreadCount);
+
+        userItem.addEventListener("click", () => selectUser(user));
+        usersList.appendChild(userItem);
+
+        updateUnreadCount(user.id, unreadCount);
+      }
+
+      function updateUserInList(user) {
+        const userItem = document.getElementById(`user-${user.id}`);
+        if (!userItem) return;
+
+        const nameElement = userItem.querySelector(".user-name");
+        if (nameElement) nameElement.textContent = user.displayName;
+
+        const lastSeenElement = userItem.querySelector(".last-seen");
+        if (lastSeenElement)
+          lastSeenElement.textContent = formatLastSeen(user.lastSeen);
+
+        const avatarElement = userItem.querySelector(".user-avatar");
+        if (avatarElement) {
+          avatarElement.parentNode.replaceChild(
+            generateAvatar(user.displayName, user.avatarColor),
+            avatarElement
+          );
+        }
+
+        const unreadCount = userItem.querySelector(".unread-count");
+        if (unreadCount) updateUnreadCount(user.id, unreadCount);
+
+        if (selectedUser && selectedUser.id === user.id) {
+          selectedUser = user;
+          const displayText = `${user.displayName} (${formatLastSeen(
+            user.lastSeen
+          )})`;
+          if (recipientName) recipientName.textContent = displayText;
+          if (mobileRecipientName)
+            mobileRecipientName.textContent = displayText;
+          if (recipientAvatar) {
+            recipientAvatar.textContent = user.displayName
+              .charAt(0)
+              .toUpperCase();
+            recipientAvatar.style.backgroundColor = user.avatarColor;
+          }
+          if (mobileRecipientAvatar) {
+            mobileRecipientAvatar.textContent = user.displayName
+              .charAt(0)
+              .toUpperCase();
+            mobileRecipientAvatar.style.backgroundColor = user.avatarColor;
+          }
+        }
+      }
+
+      function removeUserFromList(userId) {
+        const userItem = document.getElementById(`user-${userId}`);
+        if (userItem) userItem.remove();
+
+        if (selectedUser && selectedUser.id === userId) {
+          selectedUser = null;
+          if (activeChat) activeChat.style.display = "none";
+          if (emptyChat) emptyChat.style.display = "flex";
+        }
+      }
+
+      function updateUnreadCount(userId, unreadCountElement) {
+        if (!currentUser) return;
+        const chatId = [currentUser.uid, userId].sort().join("_");
+
+        db.collection("chats")
+          .doc(chatId)
+          .collection("messages")
+          .where("receiverId", "==", currentUser.uid)
+          .where("status", "!=", "read")
+          .get()
+          .then((snapshot) => {
+            const count = snapshot.size;
+            unreadCountElement.textContent = count > 0 ? count : "";
+            unreadCountElement.style.display =
+              count > 0 ? "inline-block" : "none";
+          })
+          .catch((error) =>
+            console.error("Error getting unread count:", error)
+          );
+      }
+
+      function updateAllUnreadCounts() {
+        if (!usersList || !currentUser) return;
+
+        const userItems = usersList.querySelectorAll(".user-item");
+        userItems.forEach((item) => {
+          const userId = item.id.replace("user-", "");
+          const unreadCountElement = item.querySelector(".unread-count");
+          if (unreadCountElement) updateUnreadCount(userId, unreadCountElement);
+        });
+      }
+
+      function scrollToBottom() {
+        if (messagesContainer)
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+
+      // Auth State Management
+      auth.onAuthStateChanged(async (user) => {
+        hideLoader();
+
+        if (user) {
+          currentUser = user;
+
+          if (loginSection) loginSection.style.display = "none";
+          if (signupSection) signupSection.style.display = "none";
+          if (resetPasswordSection) resetPasswordSection.style.display = "none";
+
+          if (!user.emailVerified) {
+            if (verificationEmailSpan)
+              verificationEmailSpan.textContent = user.email;
+            if (verificationSection) verificationSection.style.display = "flex";
+            return;
+          }
+
+          try {
+            const profileDoc = await db.collection("users").doc(user.uid).get();
+            if (profileDoc.exists) {
+              userProfile = profileDoc.data();
+              if (!userProfile.phoneVerified) {
+                if (!userProfile.otpCode)
+                  await sendOTP(user.uid, userProfile.phone);
+                if (otpVerificationSection)
+                  otpVerificationSection.style.display = "flex";
+              } else if (!userProfile.displayName) {
+                if (profileSection) profileSection.style.display = "flex";
+              } else {
+                if (userName) userName.textContent = userProfile.displayName;
+                if (userPic) {
+                  userPic.innerHTML = "";
+                  userPic.appendChild(
+                    generateAvatar(
+                      userProfile.displayName,
+                      userProfile.avatarColor
+                    )
+                  );
+                }
+                if (chatSection) chatSection.style.display = "flex";
+                setupMobileView();
+                loadUsers();
+                setupChatFunctionality();
+
+                await db.collection("users").doc(user.uid).update({
+                  lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+                });
+              }
+            } else {
+              if (profileSection) profileSection.style.display = "flex";
+            }
+          } catch (error) {
+            console.error("Error loading profile:", error);
+            showToast(error.message, "error");
+          }
+        } else {
+          currentUser = null;
+          userProfile = null;
+          selectedUser = null;
+
+          if (messagesUnsubscribe) messagesUnsubscribe();
+          if (usersUnsubscribe) usersUnsubscribe();
+
+          if (chatSection) chatSection.style.display = "none";
+          if (profileSection) profileSection.style.display = "none";
+          if (verificationSection) verificationSection.style.display = "none";
+          if (otpVerificationSection)
+            otpVerificationSection.style.display = "none";
+          if (resetPasswordSection) resetPasswordSection.style.display = "none";
+          if (signupSection) signupSection.style.display = "none";
+          if (loginSection) loginSection.style.display = "flex";
+        }
+      });
+
+      // Initialization
+      document.addEventListener("DOMContentLoaded", function () {
+        updateAvatarPreview();
+        setupMobileView();
+
+        const mobileStyles = document.createElement("style");
+        mobileStyles.textContent = `
+          @media (max-width: 768px) {
+              .chat-content {
+                  position: fixed;
+                  top: 0;
+                  left: 0;
+                  right: 0;
+                  bottom: 0;
+                  background-color: #fff;
+                  z-index: 100;
+                  transform: translateX(100%);
+                  transition: transform 0.3s ease;
+              }
+              .chat-content.active {
+                  transform: translateX(0);
+              }
+              .input-container {
+                  position: fixed;
+                  bottom: 0;
+                  left: 0;
+                  right: 0;
+              }
+              .messages-container {
+                  padding-bottom: 60px;
+              }
+          }
+        `;
+        document.head.appendChild(mobileStyles);
+
+        const statusStyles = document.createElement("style");
+        statusStyles.textContent = `
+          .message-status {
+              display: inline-block;
+              margin-left: 5px;
+              font-size: 12px;
+          }
+          .message-status.sent { color: #888; }
+          .message-status.delivered { color: #888; }
+          .message-status.read { color: #0084FF; }
+          .message-content { position: relative; display: flex; align-items: flex-start; }
+          .message-text { word-wrap: break-word; flex: 1; margin-right: 24px; }
+          .message-actions { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); opacity: 0; transition: opacity 0.2s ease; }
+          .my-message:hover .message-actions { opacity: 1; }
+          .delete-message-btn { background: none; border: none; cursor: pointer; color: rgba(136, 136, 136, 0.7); padding: 4px; border-radius: 50%; }
+          .delete-message-btn:hover { color: #ff5252; background-color: rgba(0, 0, 0, 0.1); }
+          .delete-dialog { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+          .delete-options { background-color: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); display: flex; flex-direction: column; min-width: 250px; }
+          .delete-options button { padding: 12px 15px; margin: 5px 0; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 500; }
+          .delete-for-me-btn { background-color: #f1f1f1; color: #333; }
+          .delete-for-me-btn:hover { background-color: #e0e0e0; }
+          .delete-for-everyone-btn { background-color: #ff5252; color: white; }
+          .delete-for-everyone-btn:hover { background-color: #ff3333; }
+          .cancel-delete-btn { background-color: #e0e0e0; color: #333; }
+          .cancel-delete-btn:hover { background-color: #d0d0d0; }
+          .deleted-message-text { font-style: italic; color: #888; }
+          .deleted-for-me { opacity: 0.6; }
+          .loading-messages { text-align: center; padding: 20px; color: #888; }
+          .message-error { text-align: center; padding: 20px; color: #ff5252; }
+          .unread-count { display: inline-block; width: 20px; height: 20px; background-color: #25D366; color: white; border-radius: 50%; text-align: center; line-height: 20px; font-size: 12px; margin-left: 10px; }
+          .last-seen { display: block; font-size: 12px; color: #888; }
+        `;
+        document.head.appendChild(statusStyles);
+
+        window.showDeleteOptions = showDeleteOptions;
+        window.closeDeleteDialog = closeDeleteDialog;
+        window.deleteMessage = deleteMessage;
+        window.generateAvatar = generateAvatar;
+        window.scrollToBottom = scrollToBottom;
+      });
+    </script>
+  </body>
 </html>
