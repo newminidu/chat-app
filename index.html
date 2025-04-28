@@ -2812,47 +2812,70 @@
         )}`;
       }
 
-      // SMS Gateway Functions
-      async function sendSMS(to, message) {
-        const userId = "29318"; // Replace with your Notify.lk user ID
-        const apiKey = "g9s0WKlpTNpXUDXYwBgX"; // Replace with your Notify.lk API key
-        const senderId = "Messageium";
-        const url = "https://app.notify.lk/api/v1/send";
+     // SMS Gateway Functions
+async function sendSMS(to, message) {
+  const userId = "29318"; // Replace with your Notify.lk user ID
+  const apiKey = "g9s0WKlpTNpXUDXYwBgX"; // Replace with your Notify.lk API key
+  const senderId = "Messageium";
+  const url = "https://app.notify.lk/api/v1/send";
 
-        const formData = new URLSearchParams();
-        formData.append("user_id", userId);
-        formData.append("api_key", apiKey);
-        formData.append("sender_id", senderId);
-        formData.append("to", to);
-        formData.append("message", message);
+  const formData = new URLSearchParams();
+  formData.append("user_id", userId);
+  formData.append("api_key", apiKey);
+  formData.append("sender_id", senderId);
+  formData.append("to", to);
+  formData.append("message", message);
 
-        try {
-          const response = await fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: formData,
-          });
-          const data = await response.json();
-          if (data.status !== "success") throw new Error("Failed to send SMS");
-        } catch (error) {
-          console.error("Error sending SMS:", error);
-          showToast("Failed to send SMS. Please try again.", "error");
-          throw error;
-        }
-      }
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: formData,
+    });
+    
+    const data = await response.json();
+    if (data.status !== "success") throw new Error(`Failed to send SMS: ${data.message || 'Unknown error'}`);
+    return data;
+  } catch (error) {
+    console.error("Error sending SMS:", error);
+    // Make sure showToast is defined or remove this line
+    if (typeof showToast === 'function') {
+      showToast("Failed to send SMS. Please try again.", "error");
+    }
+    throw error;
+  }
+}
 
-      async function sendOTP(userId, phone) {
-        const otp = Math.floor(100000 + Math.random() * 900000).toString();
-        const expiration = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+async function sendOTP(userId, phone) {
+  try {
+    // Generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiration = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+    
+    // Make sure db is defined and properly initialized
+    if (!db || typeof db.collection !== 'function') {
+      throw new Error("Database not initialized");
+    }
 
-        await db.collection("users").doc(userId).update({
-          otpCode: otp,
-          otpExpiration: expiration,
-        });
+    // Update user document with OTP
+    await db.collection("users").doc(userId).update({
+      otpCode: otp,
+      otpExpiration: expiration,
+    });
 
-        const message = `Your one-time password is ${otp}.This code will expire in 5 minutes For security reasons.`;
-        await sendSMS(phone, message);
-      }
+    // Send SMS with OTP
+    const message = `Your one-time password is ${otp}. This code will expire in 5 minutes for security reasons.`;
+    await sendSMS(phone, message);
+    
+    return true; // Indicate success
+  } catch (error) {
+    console.error("Error sending OTP:", error);
+    if (typeof showToast === 'function') {
+      showToast("Failed to send verification code. Please try again.", "error");
+    }
+    throw error;
+  }
+}
 
       // Navigation and Setup
       document.addEventListener("DOMContentLoaded", function () {
