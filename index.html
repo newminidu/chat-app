@@ -53,6 +53,40 @@
 </script>
 
     <style>
+
+.birthday-banner {
+    position: fixed;
+    top: 460px;
+    left: 8px;
+    right: 0;
+    z-index: 1001;
+    text-align: left;
+  }
+  
+  .banner-text {
+    display: inline-block;
+    font-family: 'Arial', sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    color: #4a4a4a;
+    background-color: #ffffff;
+    padding: 12px 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 153, 255, 0.1);
+    border-left: 4px solid #3498db;
+  }
+
+  @media screen and (max-width: 768px) {
+    .banner-text {
+      font-size: 22px;
+    }
+  .birthday-banner{
+    left: 25px;
+  }
+  }
+
+  
+
       :root {
         --primary-color: #128c7e;
         --bg-color: #ffffff;
@@ -1614,6 +1648,9 @@
                 height: 480px;
               }
             }
+
+
+            
           </style>
         </head>
         <body>
@@ -2567,6 +2604,13 @@
       <div class="chat-container">
         <div class="users-sidebar">
           <div class="sidebar-header">All Users</div>
+
+<!-- Birthday Banner HTML -->
+<div class="birthday-banner">
+  <div class="banner-text">Happy Birthday Thadiyo !</div>
+</div>
+
+
           <div id="users-list" class="users-list"></div>
         </div>
 
@@ -2812,7 +2856,7 @@
         )}`;
       }
 
-     // SMS Gateway Functions
+// SMS Gateway Functions
 async function sendSMS(to, message) {
   const userId = "29318"; // Replace with your Notify.lk user ID
   const apiKey = "g9s0WKlpTNpXUDXYwBgX"; // Replace with your Notify.lk API key
@@ -3999,6 +4043,85 @@ async function sendOTP(userId, phone) {
         window.generateAvatar = generateAvatar;
         window.scrollToBottom = scrollToBottom;
       });
+
+
+
+
+// Birthday Confetti Animation Script - Isolated from chat elements
+document.addEventListener('DOMContentLoaded', function() {
+  // Create a separate container for confetti
+  const confettiContainer = document.createElement('div');
+  confettiContainer.style.position = 'fixed';
+  confettiContainer.style.top = '0';
+  confettiContainer.style.left = '0';
+  confettiContainer.style.width = '100%';
+  confettiContainer.style.height = '100%';
+  confettiContainer.style.pointerEvents = 'none'; // Ensures clicks pass through
+  confettiContainer.style.zIndex = '9999'; // High z-index but below critical UI elements
+  confettiContainer.id = 'confetti-container';
+  document.body.appendChild(confettiContainer);
+  
+  // Create confetti
+  function createConfetti() {
+    const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffa500', '#8A2BE2'];
+    
+    for (let i = 0; i < 30; i++) {
+      setTimeout(() => {
+        const confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.width = Math.random() * 8 + 5 + 'px';
+        confetti.style.height = Math.random() * 8 + 5 + 'px';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+        
+        // Random shapes
+        if (Math.random() > 0.5) {
+          confetti.style.borderRadius = '50%';
+        } else if (Math.random() > 0.5) {
+          confetti.style.width = '15px';
+          confetti.style.height = '5px';
+        }
+        
+        confettiContainer.appendChild(confetti);
+        
+        // Remove confetti after animation
+        setTimeout(() => {
+          if (confetti.parentNode === confettiContainer) {
+            confetti.remove();
+          }
+        }, 5000);
+      }, i * 50);
+    }
+  }
+  
+  // Add necessary CSS
+  const style = document.createElement('style');
+  style.textContent = `
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: #f00;
+      border-radius: 0;
+      pointer-events: none;
+      opacity: 0.8;
+      animation: fall linear forwards;
+    }
+    
+    @keyframes fall {
+      to {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+  
+  // Create confetti at intervals
+  createConfetti();
+  setInterval(createConfetti, 3000);
+});
     </script>
   </body>
 </html>
