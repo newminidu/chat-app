@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="chat.png" type="image/png">
+  <title>Messageium Settings</title>
+  <style>
+    :root {
+      --primary-color: #128c7e;
+      --bg-color: #f8f9fa;
+      --secondary-bg: #ededed;
+      --text-color: #3b4a54;
+      --secondary-text: #667781;
+      --error-color: #e74c3c;
+      --success-color: #2ecc71;
+      --accent-color: #25d366;
+    }
+
+    body {
+  font-family: "Segoe UI", "Helvetica Neue", Helvetica, "Lucida Grande", Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  background-image: url('background.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  color: var(--text-color);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* You might want to add some overlay to ensure text remains readable */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.85); /* White overlay with 85% opacity */
+  z-index: -1;
+}
+
+    #login-container, #settings-container {
+      max-width: 500px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 20px;
+    }
+
+    .app-header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding-top: 40px;
+    }
+
+    .app-logo {
+      color: var(--primary-color);
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    input, button {
+      margin: 10px 0;
+      padding: 14px;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      font-size: 16px;
+      transition: all 0.2s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(18, 140, 126, 0.2);
+    }
+
+    input:disabled {
+      background-color: #f5f5f5;
+      color: #888;
+      cursor: not-allowed;
+    }
+
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.3s;
+    }
+
+    button:hover {
+      background-color: #0a7d70;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .settings-card {
+      background-color: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+      margin-bottom: 30px;
+      transition: all 0.3s ease;
+    }
+
+    .settings-card:hover {
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .settings-card h2 {
+      margin-top: 0;
+      color: var(--primary-color);
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 15px;
+      font-size: 22px;
+    }
+
+    #avatar-preview {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 42px;
+      color: white;
+      margin: 0 auto 25px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    #avatar-preview:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--secondary-text);
+    }
+
+    #status-message {
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .success {
+      background-color: rgba(46, 204, 113, 0.2);
+      color: var(--success-color);
+      border: 1px solid var(--success-color);
+    }
+
+    .error {
+      background-color: rgba(231, 76, 60, 0.2);
+      color: var(--error-color);
+      border: 1px solid var(--error-color);
+    }
+
+    .header-buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .header-buttons h1 {
+      font-size: 26px;
+      color: var(--primary-color);
+      margin: 0;
+    }
+
+    #logout-button {
+      padding: 10px 18px;
+      font-size: 14px;
+      background-color: #f1f1f1;
+      color: var(--text-color);
+      border-radius: 8px;
+    }
+
+    #logout-button:hover {
+      background-color: #e5e5e5;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 30px;
+    }
+
+    .loading-spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-top: 4px solid var(--primary-color);
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    footer {
+      text-align: center;
+      margin-top: auto;
+      padding: 30px;
+      color: var(--secondary-text);
+      border-top: 1px solid #e2e8f0;
+      background-color: white;
+    }
+
+    footer a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    footer a:hover {
+      color: #0a7d70;
+      text-decoration: underline;
+    }
+
+    .color-picker-container {
+      display: flex;
+      align-items: center;
+    }
+
+    #avatar-color {
+      height: 40px;
+      width: 80px;
+      padding: 5px;
+      cursor: pointer;
+    }
+
+    .color-preview {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      margin-left: 10px;
+      border: 1px solid #e2e8f0;
+    }
+
+    @media (max-width: 600px) {
+      #login-container, #settings-container {
+        padding: 15px;
+      }
+
+      .settings-card {
+        padding: 20px;
+      }
+
+      #avatar-preview {
+        width: 80px;
+        height: 80px;
+        font-size: 36px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-header">
+    <div class="app-logo">Messageium</div>
+    <p>Access your account settings</p>
+  </div>
+
+  <div id="loading" class="loading">
+    <div class="loading-spinner"></div>
+    <p>Loading...</p>
+  </div>
+
+  <div id="status-message"></div>
+
+  <div id="login-container">
+    <div class="settings-card">
+      <h2>Login to Settings</h2>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="Enter your email" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter your password" required>
+        </div>
+        <button type="submit">Login</button>
+      </form>
+      <p style="text-align: center; margin-top: 20px;">Don't have an account? <a href="https://messageium.com">Sign up</a></p>
+    </div>
+  </div>
+
+  <div id="settings-container" style="display: none;">
+    <div class="header-buttons">
+      <h1>Account Settings</h1>
+      <button id="logout-button">Logout</button>
+    </div>
+    
+    <div class="settings-card">
+      <h2>Profile</h2>
+      <div id="avatar-preview">?</div>
+      <div class="form-group">
+        <label for="display-name">Display Name</label>
+        <input type="text" id="display-name" placeholder="Your display name">
+      </div>
+      <div class="form-group">
+        <label for="email-display">Email</label>
+        <input type="email" id="email-display" disabled>
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" disabled>
+      </div>
+      <div class="form-group">
+        <label for="avatar-color">Avatar Color</label>
+        <div class="color-picker-container">
+          <input type="color" id="avatar-color">
+          <div class="color-preview" id="color-preview"></div>
+        </div>
+      </div>
+      <button id="save-profile">Save Profile</button>
+    </div>
+  </div>
+
+
+
+  <script src="https://www.gstatic.com/firebasejs/9.19.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.19.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.19.1/firebase-firestore-compat.js"></script>
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAK-NzCqQSCiLn5WSSf-5tWbsO5nSyubEk",
+      authDomain: "best-msg-4cb83.firebaseapp.com",
+      projectId: "best-msg-4cb83",
+      storageBucket: "best-msg-4cb83.appspot.com",
+      messagingSenderId: "94214242826",
+      appId: "1:94214242826:web:f02a0deb024e43a32fd5f3",
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // DOM Elements
+    const loadingElement = document.getElementById('loading');
+    const loginContainer = document.getElementById('login-container');
+    const settingsContainer = document.getElementById('settings-container');
+    const loginForm = document.getElementById('login-form');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const displayNameInput = document.getElementById('display-name');
+    const emailDisplay = document.getElementById('email-display');
+    const phoneInput = document.getElementById('phone');
+    const avatarColorInput = document.getElementById('avatar-color');
+    const colorPreview = document.getElementById('color-preview');
+    const saveProfileButton = document.getElementById('save-profile');
+    const logoutButton = document.getElementById('logout-button');
+    const avatarPreview = document.getElementById('avatar-preview');
+    const statusMessage = document.getElementById('status-message');
+
+    // Show status message (success or error)
+    function showStatus(message, isError = false) {
+      statusMessage.textContent = message;
+      statusMessage.className = isError ? 'error' : 'success';
+      statusMessage.style.display = 'block';
+      setTimeout(() => {
+        statusMessage.style.display = 'none';
+      }, 5000);
+    }
+
+    // Show/hide loading spinner
+    function showLoading(show = true) {
+      loadingElement.style.display = show ? 'block' : 'none';
+      loginContainer.style.display = show ? 'none' : (auth.currentUser ? 'none' : 'block');
+      settingsContainer.style.display = show ? 'none' : (auth.currentUser ? 'block' : 'none');
+    }
+
+    // Auth State Listener
+    auth.onAuthStateChanged((user) => {
+      showLoading(false);
+      if (user) {
+        loginContainer.style.display = 'none';
+        settingsContainer.style.display = 'block';
+        loadUserProfile();
+      } else {
+        settingsContainer.style.display = 'none';
+        loginContainer.style.display = 'block';
+        // Reset form fields
+        loginForm.reset();
+      }
+    });
+
+    // Login Form Submission
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+      
+      showLoading(true);
+      try {
+        await auth.signInWithEmailAndPassword(email, password);
+        showStatus('Login successful!');
+      } catch (error) {
+        console.error('Login error:', error);
+        showLoading(false);
+        showStatus(`Login failed: ${error.message}`, true);
+      }
+    });
+
+    // Load User Profile
+    async function loadUserProfile() {
+      const user = auth.currentUser;
+      if (user) {
+        showLoading(true);
+        try {
+          const userDoc = await db.collection('users').doc(user.uid).get();
+          if (userDoc.exists) {
+            const userData = userDoc.data();
+            displayNameInput.value = userData.displayName || '';
+            emailDisplay.value = user.email;
+            phoneInput.value = userData.phone || '';
+            avatarColorInput.value = userData.avatarColor || '#128C7E';
+            colorPreview.style.backgroundColor = userData.avatarColor || '#128C7E';
+          } else {
+            // Create default user document if it doesn't exist
+            const defaultUserData = {
+              displayName: user.displayName || '',
+              email: user.email,
+              phone: '',
+              avatarColor: '#128C7E',
+              createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            
+            await db.collection('users').doc(user.uid).set(defaultUserData);
+            displayNameInput.value = defaultUserData.displayName;
+            emailDisplay.value = defaultUserData.email;
+            phoneInput.value = defaultUserData.phone;
+            avatarColorInput.value = defaultUserData.avatarColor;
+            colorPreview.style.backgroundColor = defaultUserData.avatarColor;
+          }
+          updateAvatarPreview();
+        } catch (error) {
+          console.error('Error loading profile:', error);
+          showStatus('Failed to load profile. Please try again.', true);
+        } finally {
+          showLoading(false);
+        }
+      }
+    }
+
+    // Update Avatar Preview
+    function updateAvatarPreview() {
+      const displayName = displayNameInput.value.trim();
+      const avatarColor = avatarColorInput.value;
+      avatarPreview.style.backgroundColor = avatarColor;
+      colorPreview.style.backgroundColor = avatarColor;
+      avatarPreview.textContent = displayName ? displayName[0].toUpperCase() : '?';
+    }
+
+    displayNameInput.addEventListener('input', updateAvatarPreview);
+    avatarColorInput.addEventListener('input', updateAvatarPreview);
+
+    // Save Profile Changes
+    saveProfileButton.addEventListener('click', async () => {
+      const user = auth.currentUser;
+      if (user) {
+        const displayName = displayNameInput.value.trim();
+        const avatarColor = avatarColorInput.value;
+
+        if (!displayName) {
+          showStatus('Display name cannot be empty.', true);
+          return;
+        }
+
+        showLoading(true);
+        try {
+          await db.collection('users').doc(user.uid).update({
+            displayName: displayName,
+            avatarColor: avatarColor,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+          showStatus('Profile updated successfully.');
+        } catch (error) {
+          console.error('Error updating profile:', error);
+          showStatus('Failed to update profile. Please try again.', true);
+        } finally {
+          showLoading(false);
+        }
+      }
+    });
+
+    // Logout
+    logoutButton.addEventListener('click', async () => {
+      try {
+        showLoading(true);
+        await auth.signOut();
+        showStatus('Logged out successfully.');
+      } catch (error) {
+        console.error('Error logging out:', error);
+        showStatus('Failed to log out. Please try again.', true);
+      } finally {
+        showLoading(false);
+      }
+    });
+
+    // Handle initial UI state
+    showLoading(true);
+
+    // Initial Avatar Preview
+    updateAvatarPreview();
+
+    // Update color preview when color picker changes
+    avatarColorInput.addEventListener('input', () => {
+      colorPreview.style.backgroundColor = avatarColorInput.value;
+    });
+
+    // Handle offline status
+    window.addEventListener('online', () => {
+      showStatus('You are back online.');
+    });
+
+    window.addEventListener('offline', () => {
+      showStatus('You are offline. Changes will be saved when you reconnect.', true);
+    });
+  </script>
+</body>
+</html>
