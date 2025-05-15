@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Banking System</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        h1 {
+            color: #0056b3;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eaeaea;
+            padding-bottom: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus,
+        input[type="email"]:focus {
+            border-color: #0056b3;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 86, 179, 0.1);
+        }
+        
+        fieldset {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        legend {
+            font-weight: 500;
+            padding: 0 10px;
+            color: #0056b3;
+        }
+        
+        .radio-option,
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .radio-option input,
+        .checkbox-option input {
+            margin-right: 10px;
+        }
+        
+        button {
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #003d82;
+        }
+        
+        #successMessage {
+            display: none;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Online Banking System</h1>
+        
+        <form id="bankingForm">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Phone:</label>
+                <input type="text" id="phone" name="phone" placeholder="9471XXXXXXX" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <fieldset>
+                <legend>Which taxi do you require?</legend>
+                <div class="radio-option">
+                    <input type="radio" id="car" name="taxi" value="car" checked>
+                    <label for="car">Car</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="van" name="taxi" value="van">
+                    <label for="van">Van</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="tuktuk" name="taxi" value="tuktuk">
+                    <label for="tuktuk">Tuk Tuk</label>
+                </div>
+            </fieldset>
+            
+            <fieldset>
+                <legend>Extras</legend>
+                <div class="checkbox-option">
+                    <input type="checkbox" id="babyseat" name="extras[]" value="babyseat">
+                    <label for="babyseat">Baby seat</label>
+                </div>
+                <div class="checkbox-option">
+                    <input type="checkbox" id="wheelchair" name="extras[]" value="wheelchair">
+                    <label for="wheelchair">Wheelchair Access</label>
+                </div>
+            </fieldset>
+            
+            <button type="submit">Submit</button>
+        </form>
+        
+        <div id="successMessage">
+            <h3>Thank you!</h3>
+            <p>Your banking request has been submitted successfully. A confirmation SMS has been sent to your phone.</p>
+        </div>
+        
+        <script>
+            document.getElementById('bankingForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const name = document.getElementById('name').value;
+                const phone = document.getElementById('phone').value;
+                const email = document.getElementById('email').value;
+                
+                // Get selected taxi
+                let selectedTaxi = "";
+                const taxiOptions = document.getElementsByName('taxi');
+                for (let i = 0; i < taxiOptions.length; i++) {
+                    if (taxiOptions[i].checked) {
+                        selectedTaxi = taxiOptions[i].value;
+                        break;
+                    }
+                }
+                
+                // Get selected extras
+                const extras = [];
+                const extraOptions = document.getElementsByName('extras[]');
+                for (let i = 0; i < extraOptions.length; i++) {
+                    if (extraOptions[i].checked) {
+                        extras.push(extraOptions[i].value);
+                    }
+                }
+                
+                // Prepare SMS message content
+                const smsMessage = `Hello ${name}, your banking service request for a ${selectedTaxi} taxi ${extras.length > 0 ? 'with ' + extras.join(', ') : ''} has been confirmed. Thank you for using our service.`;
+                
+                // Send SMS using the Notify.lk API
+                const url = 'https://app.notify.lk/api/v1/send';
+                const params = new URLSearchParams();
+                params.append('user_id', '29318');
+                params.append('api_key', 'g9s0WKlpTNpXUDXYwBgX');
+                params.append('sender_id', 'Messageium');
+                params.append('to', phone);
+                params.append('message', smsMessage);
+                params.append('contact_fname', name.split(' ')[0]);
+                params.append('contact_lname', name.split(' ').slice(1).join(' '));
+                params.append('contact_email', email);
+                
+                fetch(url, {
+                    method: 'POST',
+                    body: params
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        // Show success message
+                        document.getElementById('bankingForm').style.display = 'none';
+                        document.getElementById('successMessage').style.display = 'block';
+                    } else {
+                        alert('There was an error sending the SMS. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('There was an error sending the SMS. Please try again.');
+                });
+            });
+        </script>
+    </div>
+</body>
+</html>
