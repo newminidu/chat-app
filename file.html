@@ -14,6 +14,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.2/firebase-app-compat.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.2/firebase-auth-compat.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.2/firebase-database-compat.min.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
 /* Modern Color Scheme with Enhanced Variables */
 :root {
@@ -213,6 +215,15 @@ h1:after, h2:after {
     background-color: #b10222;
 }
 
+.btn-share {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.btn-share:hover {
+    background-color: #138496;
+}
+
 /* Improved File List */
 .file-list {
     background-color: white;
@@ -380,6 +391,16 @@ h1:after, h2:after {
 
 .alert-error::before {
     content: "\f057";  /* times-circle icon */
+}
+
+.alert-info {
+    background-color: rgba(23, 162, 184, 0.1);
+    color: #17a2b8;
+    border-left: 4px solid #17a2b8;
+}
+
+.alert-info::before {
+    content: "\f24d";  /* clipboard icon */
 }
 
 #fileInput {
@@ -677,6 +698,7 @@ html {
             <h1>Upload Files</h1>
             <div class="alert alert-success" id="successAlert"></div>
             <div class="alert alert-error" id="errorAlert"></div>
+            <div class="alert alert-info" id="copyAlert">Link copied!</div>
             <div class="upload-area" id="uploadArea">
                 <div class="upload-icon">📁</div>
                 <h3>Drag & Drop Files Here</h3>
@@ -748,6 +770,7 @@ const adminCredentialsSection = document.getElementById('adminCredentialsSection
 const adminEmail = document.getElementById('adminEmail');
 const adminPassword = document.getElementById('adminPassword');
 const hideCredentialsBtn = document.getElementById('hideCredentialsBtn');
+const copyAlert = document.getElementById('copyAlert');
 
 // Global Variables
 let currentUser = null;
@@ -880,6 +903,10 @@ fileListContainer.addEventListener('click', (e) => {
         const fileItem = e.target.closest('.file-item');
         const fileId = fileItem.dataset.id;
         deleteFile(fileId);
+    } else if (e.target.classList.contains('share-btn')) {
+        const url = e.target.dataset.url;
+        copyToClipboard(url);
+        showCopyAlert();
     }
 });
 
@@ -1037,6 +1064,7 @@ function displayFiles(files) {
             </div>
             <div class="file-actions">
                 <a href="${file.url}" target="_blank">View/Download</a>
+                <button class="btn btn-share share-btn" data-url="${file.url}" title="Copy file link to clipboard">Copy Link</button>
                 ${canDelete ? '<button class="btn btn-danger delete-btn">Delete</button>' : ''}
             </div>
         `;
@@ -1076,6 +1104,21 @@ function showAlert(type) {
     const alert = type === 'success' ? successAlert : errorAlert;
     alert.style.display = 'block';
     setTimeout(() => alert.style.display = 'none', 3000);
+}
+
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        // Successfully copied
+    }).catch((err) => {
+        console.error('Could not copy text: ', err);
+    });
+}
+
+function showCopyAlert() {
+    copyAlert.style.display = 'block';
+    setTimeout(() => {
+        copyAlert.style.display = 'none';
+    }, 2000);
 }
     </script>
 </body>
