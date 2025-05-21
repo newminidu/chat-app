@@ -534,6 +534,42 @@
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
       }
 
+
+.attach-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #128C7E;
+}
+
+.attach-btn:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.message-content img {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 8px;
+  margin-top: 5px;
+}
+
+.message-content a {
+  color: #128C7E;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.message-content a:hover {
+  text-decoration: underline;
+}
+
+
+
       @keyframes fadeIn {
         from {
           opacity: 0;
@@ -1616,6 +1652,9 @@
                 height: 480px;
               }
             }
+
+
+            
           </style>
         </head>
         <body>
@@ -2622,15 +2661,16 @@
             </div>
             <div id="messages" class="messages-container"></div>
             <div class="input-container">
-              <input
-                type="text"
-                id="message-input"
-                class="message-input"
-                placeholder="Type a message..."
-                autocomplete="off"
-              />
-              <button id="send-btn" class="send-btn"></button>
-            </div>
+  <input type="file" id="file-upload" style="display: none;" accept="image/*,video/*,application/pdf">
+  <button id="attach-btn" class="attach-btn">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+    </svg>
+  </button>
+  <input type="text" id="message-input" class="message-input" placeholder="Type a message..." autocomplete="off">
+  <button id="send-btn" class="send-btn"></button>
+</div>
+
           </div>
         </div>
       </div>
@@ -4018,6 +4058,427 @@
         window.generateAvatar = generateAvatar;
         window.scrollToBottom = scrollToBottom;
       });
+
+
+// Cloudinary Configuration
+const cloudName = 'dmdpo4ot3';
+const uploadPreset = 'ml_default';
+
+// Add to your existing setupChatFunctionality function or after DOM elements are defined
+const attachBtn = document.getElementById('attach-btn');
+const fileUpload = document.getElementById('file-upload');
+
+if (attachBtn && fileUpload) {
+  attachBtn.addEventListener('click', () => {
+    fileUpload.click();
+  });
+
+  fileUpload.addEventListener('change', handleFileUpload);
+}
+
+// Handle File Upload
+async function handleFileUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  showLoader();
+
+  try {
+    const url = await uploadToCloudinary(file);
+    if (url) {
+      await sendFileMessage(url, file.type, file.name);
+    }
+  } catch (error) {
+    showToast('Failed to upload file', 'error');
+    console.error('Upload error:', error);
+  } finally {
+    hideLoader();
+    fileUpload.value = ''; // Reset file input
+  }
+}
+
+// Upload File to Cloudinary
+async function uploadToCloudinary(file) {
+  const url = `https://api.cloudinary.com/v1_1/${cloudName}/upload`;
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', uploadPreset);
+
+  const response = await fetch(url, {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error('Upload failed');
+  }
+
+  const data = await response.json();
+  return data.secure_url;
+}
+
+// Send File Message
+async function sendFileMessage(fileUrl, fileType, fileName) {
+  if (!selectedUser || !currentUser) return;
+
+  try {
+    const chatId = [currentUser.uid, selectedUser.id].sort().join('_');
+    const messageRef = db.collection('chats').doc(chatId).collection('messages').doc();
+
+    await messageRef.set({
+      text: `Sent a file: ${fileName || 'Unnamed file'}`,
+      fileUrl: fileUrl,
+      fileType: fileType || '',
+      fileName: fileName || 'file',
+      senderId: currentUser.uid,
+      receiverId: selectedUser.id,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      status: 'sent',
+      isDeleted: false,
+    });
+
+    await messageRef.update({ status: 'delivered' });
+
+    await db.collection('users').doc(currentUser.uid).update({
+      lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+  } catch (error) {
+    showToast(error.message, 'error');
+  }
+}
+
+// File Type Helpers
+function getFileType(url, fileType) {
+  if (!url) return 'unknown';
+  
+  // If fileType is available from upload, use it for more accuracy
+  if (fileType) {
+    if (fileType.startsWith('image/')) return 'image';
+    if (fileType.startsWith('video/')) return 'video';
+    if (fileType.startsWith('audio/')) return 'audio';
+  }
+  
+  // Fallback to extension checking
+  const extension = url.split('.').pop().toLowerCase();
+  
+  if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'].includes(extension)) {
+    return 'image';
+  } else if (['mp4', 'webm', 'ogg', 'mov', 'avi', 'wmv', 'flv'].includes(extension)) {
+    return 'video';
+  } else if (['mp3', 'wav', 'ogg', 'm4a', 'aac', 'flac'].includes(extension)) {
+    return 'audio';
+  } else {
+    return 'document';
+  }
+}
+
+// Get file icon based on file type
+function getFileIcon(fileName) {
+  const extension = fileName.split('.').pop().toLowerCase();
+  
+  const iconMap = {
+    // Documents
+    'pdf': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>',
+    'doc': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>',
+    'docx': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>',
+    'xls': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line><line x1="15" y1="3" x2="15" y2="21"></line><line x1="3" y1="9" x2="21" y2="9"></line><line x1="3" y1="15" x2="21" y2="15"></line></svg>',
+    'xlsx': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line><line x1="15" y1="3" x2="15" y2="21"></line><line x1="3" y1="9" x2="21" y2="9"></line><line x1="3" y1="15" x2="21" y2="15"></line></svg>',
+    'ppt': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="7" y2="7"></line><line x1="2" y1="17" x2="7" y2="17"></line><line x1="17" y1="17" x2="22" y2="17"></line><line x1="17" y1="7" x2="22" y2="7"></line></svg>',
+    'pptx': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="7" y2="7"></line><line x1="2" y1="17" x2="7" y2="17"></line><line x1="17" y1="17" x2="22" y2="17"></line><line x1="17" y1="7" x2="22" y2="7"></line></svg>',
+    'txt': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>',
+    // Media
+    'mp3': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>',
+    'wav': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>',
+    'mp4': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="7" y2="7"></line><line x1="2" y1="17" x2="7" y2="17"></line><line x1="17" y1="17" x2="22" y2="17"></line><line x1="17" y1="7" x2="22" y2="7"></line></svg>',
+    'zip': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>',
+  };
+  
+  return iconMap[extension] || '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>';
+}
+
+// Generate content for different file types
+function generateFileContent(message) {
+  if (!message.fileUrl) return '<div class="message-text">Message unavailable</div>';
+  
+  const fileType = getFileType(message.fileUrl, message.fileType);
+  const fileName = message.fileName || 'file';
+  
+  switch (fileType) {
+    case 'image':
+      return `
+        <div class="image-container">
+          <img src="${message.fileUrl}" alt="Image" class="message-image" onclick="openImageViewer('${message.fileUrl}')">
+          <div class="file-info">
+            <span class="file-name">${fileName}</span>
+            <a href="${message.fileUrl}" download="${fileName}" class="download-btn" title="Download">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            </a>
+          </div>
+        </div>
+      `;
+      
+    case 'video':
+      return `
+        <div class="video-container">
+          <video src="${message.fileUrl}" controls class="message-video">
+            Your browser does not support the video tag.
+          </video>
+          <div class="file-info">
+            <span class="file-name">${fileName}</span>
+            <a href="${message.fileUrl}" download="${fileName}" class="download-btn" title="Download">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            </a>
+          </div>
+        </div>
+      `;
+      
+    case 'audio':
+      return `
+        <div class="audio-container">
+          <audio src="${message.fileUrl}" controls class="message-audio">
+            Your browser does not support the audio tag.
+          </audio>
+          <div class="file-info">
+            <span class="file-name">${fileName}</span>
+            <a href="${message.fileUrl}" download="${fileName}" class="download-btn" title="Download">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            </a>
+          </div>
+        </div>
+      `;
+      
+    case 'document':
+    default:
+      return `
+        <div class="document-container">
+          <div class="file-icon">
+            ${getFileIcon(fileName)}
+          </div>
+          <div class="file-info">
+            <span class="file-name">${fileName}</span>
+            <a href="${message.fileUrl}" download="${fileName}" class="download-btn" title="Download">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            </a>
+          </div>
+        </div>
+      `;
+  }
+}
+
+// Image Viewer
+function openImageViewer(imageUrl) {
+  const modal = document.createElement('div');
+  modal.className = 'image-modal';
+  modal.innerHTML = `
+    <div class="image-modal-content">
+      <span class="close-modal">&times;</span>
+      <img src="${imageUrl}" class="modal-image">
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  
+  // Close on X click
+  modal.querySelector('.close-modal').addEventListener('click', () => {
+    document.body.removeChild(modal);
+  });
+  
+  // Close on outside click
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      document.body.removeChild(modal);
+    }
+  });
+}
+
+// Update your existing displayMessage function
+function displayMessage(message, isNew = false) {
+  if (!messagesContainer || !currentUser) return null;
+
+  if (document.querySelector(`.message[data-id="${message.id}"]`)) return null;
+
+  const messageDiv = document.createElement('div');
+  messageDiv.className = `message ${message.senderId === currentUser.uid ? 'my-message' : 'other-message'}`;
+  messageDiv.dataset.id = message.id;
+
+  const timestamp = message.timestamp ? message.timestamp.toDate() : new Date();
+  const time = timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+  const isMine = message.senderId === currentUser.uid;
+  let senderName = isMine ? (userProfile?.displayName || 'Me') : (selectedUser?.displayName || 'User');
+  let senderColor = isMine ? (userProfile?.avatarColor || '#128C7E') : (selectedUser?.avatarColor || '#128C7E');
+
+  let statusHTML = '';
+  if (isMine && !message.isDeleted) {
+    switch (message.status) {
+      case 'sent': statusHTML = '<span class="message-status sent">✓</span>'; break;
+      case 'delivered': statusHTML = '<span class="message-status delivered">✓✓</span>'; break;
+      case 'read': statusHTML = '<span class="message-status read">✓✓</span>'; break;
+    }
+  }
+
+  const contentHTML = message.isDeleted ? 
+    '<i class="deleted-message-text">This message was deleted</i>' : 
+    (message.fileUrl ? generateFileContent(message) : `<div class="message-text">${message.text}</div>`);
+
+  messageDiv.innerHTML = isMine ? 
+    `
+      <div class="message-header">
+          <span class="message-time">${time}</span>
+          ${statusHTML}
+      </div>
+      <div class="message-content">
+          ${contentHTML}
+          ${!message.isDeleted ? 
+            `<div class="message-actions">
+                 <button class="delete-message-btn" onclick="showDeleteOptions('${message.id}')">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                         <polyline points="3 6 5 6 21 6"></polyline>
+                         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                     </svg>
+                 </button>
+             </div>` : ''
+          }
+      </div>
+    ` : 
+    `
+      <div class="message-header">
+          <div class="user-avatar" style="background-color: ${senderColor};">${senderName.charAt(0).toUpperCase()}</div>
+          <span class="message-sender">${senderName}</span>
+          <span class="message-time">${time}</span>
+      </div>
+      <div class="message-content">
+          ${contentHTML}
+      </div>
+    `;
+
+  messagesContainer.appendChild(messageDiv);
+
+  if (!isMine && !message.isDeleted && message.status !== 'read' && isNew) {
+    const chatId = [currentUser.uid, message.senderId].sort().join('_');
+    db.collection('chats').doc(chatId).collection('messages').doc(message.id)
+      .update({ status: 'read' })
+      .catch(error => console.error('Error updating message status:', error));
+  }
+
+  if (isNew) scrollToBottom();
+  return messageDiv;
+}
+
+// Add CSS styles to the document head for the new components
+function addStyles() {
+  const style = document.createElement('style');
+  style.textContent = `
+    /* File containers */
+    .image-container, .video-container, .audio-container, .document-container {
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 5px;
+      background-color: rgba(0, 0, 0, 0.03);
+      width: 100%;
+    }
+    
+    /* Media elements */
+    .message-image {
+      max-width: 200px;
+      max-height: 200px;
+      border-radius: 8px 8px 0 0;
+      cursor: pointer;
+      display: block;
+      width: 100%;
+      object-fit: cover;
+    }
+    
+    .message-video {
+      max-width: 250px;
+      width: 100%;
+      border-radius: 8px 8px 0 0;
+    }
+    
+    .message-audio {
+      width: 100%;
+      min-width: 200px;
+    }
+    
+    /* File info */
+    .file-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+    
+    .file-name {
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 160px;
+    }
+    
+    .document-container {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+    }
+    
+    .file-icon {
+      margin-right: 12px;
+      color: #128C7E;
+    }
+    
+    .download-btn {
+      color: #128C7E;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* Image Modal */
+    .image-modal {
+      display: flex;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .image-modal-content {
+      position: relative;
+      max-width: 90%;
+      max-height: 90%;
+    }
+    
+    .modal-image {
+      max-width: 100%;
+      max-height: 90vh;
+      display: block;
+      margin: 0 auto;
+    }
+    
+    .close-modal {
+      position: absolute;
+      top: -30px;
+      right: 0;
+      color: white;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+// Call this function when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+  addStyles();
+});
     </script>
   </body>
 </html>
