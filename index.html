@@ -4479,6 +4479,186 @@ function addStyles() {
 document.addEventListener('DOMContentLoaded', function() {
   addStyles();
 });
+
+
+// Function to make all URL formats clickable in chat messages
+function makeLinksClickable() {
+  // Select all chat message elements - adjust the selector to match your app's structure
+  const chatMessages = document.querySelectorAll('.message-text, .chat-message, .message-content'); // Common message container classes
+  
+  if (chatMessages.length === 0) {
+    console.log('No chat messages found. Trying to find messages with different selectors...');
+    // If no messages found with common selectors, try to find any possible message containers
+    const possibleMessages = document.querySelectorAll('div[class*="message"], p[class*="message"], span[class*="message"], div[class*="chat"], p[class*="chat"]');
+    if (possibleMessages.length > 0) {
+      console.log('Found possible message elements:', possibleMessages.length);
+      processMessages(possibleMessages);
+    }
+  } else {
+    processMessages(chatMessages);
+  }
+}
+
+// Process messages to make links clickable
+function processMessages(messages) {
+  // More comprehensive URL regex pattern to identify various link formats
+  // This matches: domain.com, www.domain.com, http://domain.com, https://domain.com
+  const urlRegex = /(?:(?:https?:\/\/)?(?:www\.)?([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+)(?:\/[^\s]*)?)/g;
+  
+  messages.forEach(message => {
+    // Skip if we've already processed this message
+    if (message.dataset.linksProcessed === 'true') return;
+    
+    try {
+      // Store original content to check if we need to make changes
+      const originalContent = message.innerHTML;
+      
+      // Get all text nodes within the message
+      const textNodes = getTextNodes(message);
+      
+      let contentChanged = false;
+      
+      // Process each text node separately to avoid modifying existing HTML elements
+      textNodes.forEach(textNode => {
+        if (!textNode.nodeValue.trim()) return; // Skip empty text nodes
+        
+        const parent = textNode.parentNode;
+        // Skip if parent is already an anchor tag
+        if (parent.nodeName.toLowerCase() === 'a') return;
+        
+        // Create a document fragment to hold the new content
+        const fragment = document.createDocumentFragment();
+        let lastIndex = 0;
+        let match;
+        
+        // Reset regex for this text node
+        urlRegex.lastIndex = 0;
+        
+        // Find all URLs in this text node
+        while ((match = urlRegex.exec(textNode.nodeValue)) !== null) {
+          // Add text before the match
+          if (match.index > lastIndex) {
+            fragment.appendChild(document.createTextNode(textNode.nodeValue.substring(lastIndex, match.index)));
+          }
+          
+          // The matched URL
+          const url = match[0];
+          
+          // Create proper href (add https:// if missing)
+          const href = url.startsWith('http') ? url : 'https://' + url;
+          
+          // Create the anchor element
+          const link = document.createElement('a');
+          link.href = href;
+          link.textContent = url;
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+          
+          // Add the link to the fragment
+          fragment.appendChild(link);
+          
+          // Update the last index
+          lastIndex = match.index + url.length;
+          contentChanged = true;
+        }
+        
+        // Add any remaining text
+        if (lastIndex < textNode.nodeValue.length) {
+          fragment.appendChild(document.createTextNode(textNode.nodeValue.substring(lastIndex)));
+        }
+        
+        // Replace the text node with the fragment if we found links
+        if (lastIndex > 0) {
+          parent.replaceChild(fragment, textNode);
+        }
+      });
+      
+      // Mark this message as processed
+      message.dataset.linksProcessed = 'true';
+      
+      if (contentChanged) {
+        console.log('Links converted in message:', message);
+      }
+    } catch (error) {
+      console.error('Error processing message:', error);
+    }
+  });
+}
+
+// Helper function to get all text nodes within an element
+function getTextNodes(element) {
+  const textNodes = [];
+  const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
+  
+  let node;
+  while (node = walker.nextNode()) {
+    textNodes.push(node);
+  }
+  
+  return textNodes;
+}
+
+// Function to continuously monitor for new messages
+function initLinkConverter() {
+  // Call once immediately to process existing messages
+  makeLinksClickable();
+  
+  // Set up a MutationObserver to detect when new messages are added
+  const chatContainer = document.querySelector('.chat-container, .messages-container, .conversation, .chat-area, main');
+  
+  if (!chatContainer) {
+    console.log('Trying to find the chat container with a more general approach...');
+    // Try to find a container that might hold messages
+    const possibleContainers = document.querySelectorAll('div[class*="chat"], div[class*="message"], div[class*="conversation"]');
+    
+    if (possibleContainers.length > 0) {
+      console.log('Found possible chat containers:', possibleContainers.length);
+      
+      // Set up observers for all possible containers
+      possibleContainers.forEach(container => {
+        observeContainer(container);
+      });
+    } else {
+      // Last resort: observe the body
+      console.log('No specific chat container found. Observing the entire body.');
+      observeContainer(document.body);
+    }
+  } else {
+    observeContainer(chatContainer);
+  }
+  
+  // Also check for new messages periodically as a fallback
+  setInterval(makeLinksClickable, 2000);
+}
+
+// Helper function to observe a container
+function observeContainer(container) {
+  const observer = new MutationObserver(() => {
+    setTimeout(makeLinksClickable, 100); // Small delay to ensure DOM is settled
+  });
+  
+  // Start observing the container for added nodes
+  observer.observe(container, { 
+    childList: true,     // Watch for new messages
+    subtree: true,       // Watch for changes in descendants too
+    characterData: true  // Watch for changes in text content
+  });
+  
+  console.log('Observer set up for:', container);
+}
+
+// Initialize the link converter
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initLinkConverter);
+} else {
+  // DOM already loaded, run immediately
+  initLinkConverter();
+}
+
+// Re-run when dynamic content might be loaded
+window.addEventListener('load', makeLinksClickable);
+setTimeout(makeLinksClickable, 1000); // Backup check after 1 second
+setTimeout(makeLinksClickable, 3000); // Another check after 3 seconds
     </script>
   </body>
 </html>
